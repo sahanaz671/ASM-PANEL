@@ -40,7 +40,88 @@
     50% { box-shadow: 0 0 60px #d4af3755, 0 20px 60px #00000088; }
   }
 
-  #galaxy {
+  @keyframes cloudMove {
+    0% { transform: translateX(-200px); opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 1; }
+    100% { transform: translateX(110vw); opacity: 0; }
+  }
+
+  @keyframes birdFly {
+    0% { transform: translateX(-100px) translateY(0px); opacity: 0; }
+    5% { opacity: 1; }
+    25% { transform: translateX(25vw) translateY(-20px); }
+    50% { transform: translateX(50vw) translateY(5px); }
+    75% { transform: translateX(75vw) translateY(-15px); }
+    95% { opacity: 1; }
+    100% { transform: translateX(110vw) translateY(0px); opacity: 0; }
+  }
+
+  @keyframes petalFall {
+    0% { transform: translateY(-20px) translateX(0px) rotate(0deg); opacity: 1; }
+    25% { transform: translateY(25vh) translateX(30px) rotate(90deg); }
+    50% { transform: translateY(50vh) translateX(-20px) rotate(180deg); }
+    75% { transform: translateY(75vh) translateX(25px) rotate(270deg); }
+    100% { transform: translateY(105vh) translateX(-10px) rotate(360deg); opacity: 0; }
+  }
+
+  @keyframes leafFall {
+    0% { transform: translateY(-20px) translateX(0px) rotate(0deg); opacity: 1; }
+    20% { transform: translateY(20vh) translateX(40px) rotate(72deg); }
+    40% { transform: translateY(40vh) translateX(-30px) rotate(144deg); }
+    60% { transform: translateY(60vh) translateX(35px) rotate(216deg); }
+      80% { transform: translateY(80vh) translateX(-25px) rotate(288deg); }
+    100% { transform: translateY(105vh) translateX(10px) rotate(360deg); opacity: 0; }
+  }
+
+  @keyframes snowFall {
+    0% { transform: translateY(-10px) translateX(0px); opacity: 1; }
+    25% { transform: translateY(25vh) translateX(15px); }
+    50% { transform: translateY(50vh) translateX(-10px); }
+    75% { transform: translateY(75vh) translateX(12px); }
+    100% { transform: translateY(105vh) translateX(-5px); opacity: 0.3; }
+  }
+
+  @keyframes sunRay {
+    0%, 100% { opacity: 0.03; transform: rotate(var(--angle)) scaleY(1); }
+    50% { opacity: 0.08; transform: rotate(var(--angle)) scaleY(1.1); }
+  }
+
+  @keyframes shimmerRain {
+    0% { opacity: 0.6; transform: translateY(-5px); }
+    100% { opacity: 0; transform: translateY(100vh); }
+  }
+
+  @keyframes butterflyWing {
+    0%, 100% { transform: scaleX(1); }
+    50% { transform: scaleX(0.3); }
+  }
+
+  @keyframes butterflyMove {
+    0% { transform: translateX(-50px) translateY(0); opacity: 0; }
+    5% { opacity: 1; }
+    20% { transform: translateX(20vw) translateY(-40px); }
+    40% { transform: translateX(40vw) translateY(20px); }
+    60% { transform: translateX(60vw) translateY(-30px); }
+    80% { transform: translateX(80vw) translateY(10px); }
+    95% { opacity: 1; }
+    100% { transform: translateX(110vw) translateY(0); opacity: 0; }
+  }
+
+  @keyframes mistDrift {
+    0% { transform: translateX(-10%) scaleX(1); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 0.8; }
+    100% { transform: translateX(10%) scaleX(1.1); opacity: 0; }
+  }
+
+  @keyframes frostPulse {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.25; }
+  }
+
+  /* Canvas behind everything */
+  #bgCanvas {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
@@ -48,11 +129,137 @@
     pointer-events: none;
   }
 
+  /* Season overlay */
+  #seasonOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    transition: background 3s ease;
+  }
+
+  /* Particle container */
+  #particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* Cloud styles */
+  .cloud {
+    position: absolute;
+    border-radius: 50px;
+    filter: blur(8px);
+    animation: cloudMove linear infinite;
+    pointer-events: none;
+  }
+
+  /* Bird styles */
+  .bird {
+    position: absolute;
+    font-size: 18px;
+    animation: birdFly linear infinite;
+    pointer-events: none;
+    filter: drop-shadow(0 0 3px rgba(0,0,0,0.5));
+  }
+
+  /* Petal */
+  .petal {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50% 0 50% 0;
+    animation: petalFall linear infinite;
+    pointer-events: none;
+  }
+
+  /* Leaf */
+  .leaf {
+    position: absolute;
+    width: 12px;
+    height: 8px;
+    border-radius: 50% 0;
+    animation: leafFall linear infinite;
+    pointer-events: none;
+  }
+
+  /* Snow */
+  .snowflake {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: snowFall linear infinite;
+    pointer-events: none;
+  }
+
+  /* Rain */
+  .raindrop {
+    position: absolute;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(180,210,255,0.6));
+    animation: shimmerRain linear infinite;
+    pointer-events: none;
+  }
+
+  /* Butterfly */
+  .butterfly {
+    position: absolute;
+    font-size: 16px;
+    animation: butterflyMove linear infinite;
+    pointer-events: none;
+  }
+
+  /* Mist */
+  .mist {
+    position: absolute;
+    width: 120%;
+    left: -10%;
+    border-radius: 50%;
+    filter: blur(30px);
+    animation: mistDrift ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* Frost overlay */
+  .frost {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    animation: frostPulse 4s ease-in-out infinite;
+  }
+
+  /* Season indicator */
+  .season-badge {
+    position: fixed;
+    top: 70px;
+    right: 15px;
+    z-index: 50;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid #d4af3744;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px;
+    color: #d4af37;
+    backdrop-filter: blur(10px);
+  }
+
+  /* Main content */
+  .content {
+    position: relative;
+    z-index: 10;
+  }
+
   .navbar {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    background: rgba(0,0,8,0.82);
+    background: rgba(0,0,8,0.75);
     backdrop-filter: blur(24px);
     border-bottom: 1px solid #d4af3733;
     padding: 14px 20px;
@@ -102,14 +309,9 @@
     box-shadow: 0 0 20px #d4af3766;
   }
 
-  .content {
-    position: relative;
-    z-index: 1;
-  }
-
   .announcement {
     margin: 80px 20px 0;
-    background: linear-gradient(135deg, #0d0a00cc, #1a1400cc);
+    background: rgba(13,10,0,0.7);
     border: 1px solid #d4af3777;
     border-radius: 15px;
     padding: 14px 18px;
@@ -117,7 +319,7 @@
     align-items: center;
     gap: 12px;
     animation: pulse 3s infinite;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
   }
 
   .announcement-icon { font-size: 22px; }
@@ -132,7 +334,7 @@
   }
 
   .hero-badge {
-    background: linear-gradient(135deg, #0d0d0dcc, #1a1a00cc);
+    background: rgba(13,13,0,0.7);
     border: 1px solid #d4af3755;
     color: #d4af37;
     padding: 8px 20px;
@@ -164,7 +366,7 @@
 
   .hero-sub {
     font-size: 14px;
-    color: #777;
+    color: #888;
     max-width: 440px;
     line-height: 1.7;
     margin-bottom: 35px;
@@ -211,14 +413,14 @@
   .btn-secondary:hover { background: #d4af3722; transform: translateY(-3px); }
 
   .hero-card {
-    background: linear-gradient(135deg, #0a0a0acc, #111108cc);
+    background: rgba(10,10,10,0.75);
     border: 1px solid #d4af3744;
     border-radius: 20px;
     padding: 22px;
     width: 100%;
     max-width: 340px;
     animation: float 4s ease-in-out infinite, cardGlow 3s ease-in-out infinite;
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px);
     position: relative;
     overflow: hidden;
   }
@@ -261,7 +463,7 @@
   }
 
   .stat-card {
-    background: linear-gradient(135deg, #0a0a0acc, #111108cc);
+    background: rgba(10,10,10,0.7);
     border: 1px solid #d4af3733;
     border-radius: 15px;
     padding: 20px 15px;
@@ -313,7 +515,7 @@
   }
 
   .service-card {
-    background: linear-gradient(135deg, #0a0a0acc, #111108cc);
+    background: rgba(10,10,10,0.7);
     border: 1px solid #d4af3733;
     border-radius: 15px;
     padding: 20px 12px;
@@ -342,7 +544,7 @@
   }
 
   .support-card {
-    background: linear-gradient(135deg, #0a0a0acc, #111108cc);
+    background: rgba(10,10,10,0.7);
     border: 1px solid #d4af3733;
     border-radius: 15px;
     padding: 18px 8px;
@@ -402,7 +604,12 @@
 </head>
 <body>
 
-<canvas id="galaxy"></canvas>
+<canvas id="bgCanvas"></canvas>
+<div id="seasonOverlay"></div>
+<div id="particles"></div>
+<div id="frostLayer"></div>
+
+<div class="season-badge" id="seasonBadge">🌸 Spring</div>
 
 <div class="content">
   <nav class="navbar">
@@ -516,8 +723,12 @@
 </nav>
 
 <script>
-const canvas = document.getElementById('galaxy');
+const canvas = document.getElementById('bgCanvas');
 const ctx = canvas.getContext('2d');
+const overlay = document.getElementById('seasonOverlay');
+const particlesDiv = document.getElementById('particles');
+const frostLayer = document.getElementById('frostLayer');
+const seasonBadge = document.getElementById('seasonBadge');
 
 function resize() {
   canvas.width = window.innerWidth;
@@ -526,133 +737,367 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
-// Create stars
-const stars = Array.from({length: 300}, () => ({
-  x: Math.random() * canvas.width,
-  y: Math.random() * canvas.height,
-  r: Math.random() * 1.5 + 0.3,
+// Get current season
+function getSeason() {
+  const m = new Date().getMonth() + 1;
+  if (m >= 3 && m <= 5) return 'spring';
+  if (m >= 6 && m <= 8) return 'summer';
+  if (m >= 9 && m <= 11) return 'autumn';
+  return 'winter';
+}
+
+const season = getSeason();
+
+// Season configs
+const seasonConfig = {
+  spring: {
+    badge: '🌸 Spring',
+    skyColors: ['#0a0015', '#0d0520', '#150830'],
+    horizonGlow: 'rgba(255,150,200,0.08)',
+    groundGlow: 'rgba(200,100,180,0.05)',
+    cloudColor: 'rgba(255,220,240,0.18)',
+    stars: true
+  },
+  summer: {
+    badge: '☀️ Summer',
+    skyColors: ['#000510', '#050a1a', '#0a0f25'],
+    horizonGlow: 'rgba(255,200,50,0.1)',
+    groundGlow: 'rgba(255,160,0,0.06)',
+    cloudColor: 'rgba(255,255,220,0.15)',
+    stars: true
+  },
+  autumn: {
+    badge: '🍂 Autumn',
+    skyColors: ['#080500', '#120a00', '#1a0f00'],
+    horizonGlow: 'rgba(255,100,20,0.12)',
+    groundGlow: 'rgba(200,80,0,0.08)',
+    cloudColor: 'rgba(255,180,100,0.2)',
+    stars: true
+  },
+  winter: {
+    badge: '❄️ Winter',
+    skyColors: ['#000510', '#020818', '#050d20'],
+    horizonGlow: 'rgba(150,200,255,0.08)',
+    groundGlow: 'rgba(100,150,255,0.05)',
+    cloudColor: 'rgba(200,220,255,0.2)',
+    stars: true
+  }
+};
+
+const cfg = seasonConfig[season];
+seasonBadge.textContent = cfg.badge;
+
+// Stars
+const stars = Array.from({length: 280}, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight * 0.7,
+  r: Math.random() * 1.6 + 0.2,
   alpha: Math.random(),
-  delta: Math.random() * 0.008 + 0.002,
+  delta: Math.random() * 0.006 + 0.002,
   gold: Math.random() > 0.88
 }));
 
-// Shooting stars pool
+// Shooting stars
 const shoots = [];
-
 function spawnShoot() {
+  if (Math.random() > 0.3) return;
   shoots.push({
-    x: Math.random() * canvas.width * 0.8,
-    y: Math.random() * canvas.height * 0.4,
-    len: Math.random() * 120 + 60,
-    speed: Math.random() * 6 + 5,
-    alpha: 1,
-    trail: []
+    x: Math.random() * canvas.width * 0.7,
+    y: Math.random() * canvas.height * 0.3,
+    len: Math.random() * 100 + 60,
+    speed: Math.random() * 7 + 5,
+    alpha: 1
   });
 }
+setInterval(spawnShoot, 1000);
 
-setInterval(spawnShoot, 1200);
-spawnShoot();
-
-function drawMilkyWay() {
-  // Diagonal milky way band
-  const grad = ctx.createLinearGradient(0, canvas.height * 0.2, canvas.width, canvas.height * 0.8);
-  grad.addColorStop(0, 'rgba(0,0,0,0)');
-  grad.addColorStop(0.2, 'rgba(20,15,5,0.12)');
-  grad.addColorStop(0.35, 'rgba(40,30,8,0.18)');
-  grad.addColorStop(0.5, 'rgba(50,38,10,0.22)');
-  grad.addColorStop(0.65, 'rgba(40,30,8,0.18)');
-  grad.addColorStop(0.8, 'rgba(20,15,5,0.12)');
-  grad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Milky way glow clusters
-  [[0.3, 0.3, 80], [0.5, 0.5, 120], [0.7, 0.65, 90]].forEach(([rx, ry, size]) => {
-    const g = ctx.createRadialGradient(
-      canvas.width * rx, canvas.height * ry, 0,
-      canvas.width * rx, canvas.height * ry, size
-    );
-    g.addColorStop(0, 'rgba(212,175,55,0.06)');
-    g.addColorStop(0.5, 'rgba(180,140,40,0.03)');
-    g.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(canvas.width * rx, canvas.height * ry, size, 0, Math.PI * 2);
-    ctx.fill();
-  });
-}
-
-function animate() {
+// Canvas animation loop
+function drawBg() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  drawMilkyWay();
+  // Sky gradient
+  const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  sky.addColorStop(0, cfg.skyColors[0]);
+  sky.addColorStop(0.5, cfg.skyColors[1]);
+  sky.addColorStop(1, cfg.skyColors[2]);
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Twinkling stars
+  // Horizon glow
+  const hg = ctx.createRadialGradient(
+    canvas.width/2, canvas.height, 0,
+    canvas.width/2, canvas.height, canvas.width * 0.8
+  );
+  hg.addColorStop(0, cfg.horizonGlow);
+  hg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = hg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Milky way band
+  const mw = ctx.createLinearGradient(0, canvas.height*0.1, canvas.width, canvas.height*0.6);
+  mw.addColorStop(0, 'rgba(0,0,0,0)');
+  mw.addColorStop(0.3, 'rgba(30,20,8,0.12)');
+  mw.addColorStop(0.5, 'rgba(50,35,10,0.18)');
+  mw.addColorStop(0.7, 'rgba(30,20,8,0.12)');
+  mw.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = mw;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Stars
   stars.forEach(s => {
     s.alpha += s.delta * (Math.random() > 0.5 ? 1 : -1);
     s.alpha = Math.max(0.05, Math.min(1, s.alpha));
-
     ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
     ctx.fillStyle = s.gold
       ? `rgba(212,175,55,${s.alpha})`
       : `rgba(255,255,255,${s.alpha})`;
     ctx.fill();
-
-    // Sparkle cross for bigger stars
-    if (s.r > 1.2 && s.alpha > 0.7) {
+    if (s.r > 1.2 && s.alpha > 0.8) {
       ctx.strokeStyle = s.gold
-        ? `rgba(212,175,55,${s.alpha * 0.4})`
-        : `rgba(255,255,255,${s.alpha * 0.3})`;
+        ? `rgba(212,175,55,${s.alpha*0.3})`
+        : `rgba(255,255,255,${s.alpha*0.25})`;
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(s.x - s.r * 3, s.y);
-      ctx.lineTo(s.x + s.r * 3, s.y);
-      ctx.moveTo(s.x, s.y - s.r * 3);
-      ctx.lineTo(s.x, s.y + s.r * 3);
+      ctx.moveTo(s.x - s.r*3, s.y); ctx.lineTo(s.x + s.r*3, s.y);
+      ctx.moveTo(s.x, s.y - s.r*3); ctx.lineTo(s.x, s.y + s.r*3);
       ctx.stroke();
     }
   });
 
   // Shooting stars
-  for (let i = shoots.length - 1; i >= 0; i--) {
+  for (let i = shoots.length-1; i >= 0; i--) {
     const s = shoots[i];
-    s.x += s.speed;
-    s.y += s.speed * 0.5;
-    s.alpha -= 0.012;
-
-    if (s.alpha <= 0) { shoots.splice(i, 1); continue; }
-
-    const tailX = s.x - s.len;
-    const tailY = s.y - s.len * 0.5;
-
-    const grad = ctx.createLinearGradient(tailX, tailY, s.x, s.y);
-    grad.addColorStop(0, 'rgba(0,0,0,0)');
-    grad.addColorStop(0.6, `rgba(212,175,55,${s.alpha * 0.4})`);
-    grad.addColorStop(1, `rgba(255,255,255,${s.alpha})`);
-
-    ctx.beginPath();
-    ctx.moveTo(tailX, tailY);
-    ctx.lineTo(s.x, s.y);
-    ctx.strokeStyle = grad;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Head glow
-    const glow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, 6);
+    s.x += s.speed; s.y += s.speed * 0.45;
+    s.alpha -= 0.014;
+    if (s.alpha <= 0) { shoots.splice(i,1); continue; }
+    const tx = s.x - s.len, ty = s.y - s.len*0.45;
+    const g = ctx.createLinearGradient(tx, ty, s.x, s.y);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(0.5, `rgba(212,175,55,${s.alpha*0.35})`);
+    g.addColorStop(1, `rgba(255,255,255,${s.alpha})`);
+    ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(s.x,s.y);
+    ctx.strokeStyle = g; ctx.lineWidth = 2; ctx.stroke();
+    const glow = ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,7);
     glow.addColorStop(0, `rgba(255,255,255,${s.alpha})`);
-    glow.addColorStop(0.5, `rgba(212,175,55,${s.alpha * 0.5})`);
+    glow.addColorStop(0.5, `rgba(212,175,55,${s.alpha*0.4})`);
     glow.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, 6, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(s.x,s.y,7,0,Math.PI*2); ctx.fill();
   }
 
-  requestAnimationFrame(animate);
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// Clear old particles
+particlesDiv.innerHTML = '';
+frostLayer.innerHTML = '';
+
+// CLOUDS
+function makeCloud(season) {
+  const cloud = document.createElement('div');
+  cloud.className = 'cloud';
+  const w = Math.random()*120+60;
+  const h = w * 0.4;
+  cloud.style.cssText = `
+    width:${w}px; height:${h}px;
+    top:${Math.random()*45+5}%;
+    left:-${w+20}px;
+    background:${cfg.cloudColor};
+    animation-duration:${Math.random()*40+25}s;
+    animation-delay:${Math.random()*20}s;
+  `;
+  particlesDiv.appendChild(cloud);
+}
+for (let i=0; i<8; i++) makeCloud(season);
+
+// BIRDS (spring & summer)
+if (season === 'spring' || season === 'summer') {
+  function makeBird() {
+    const bird = document.createElement('div');
+    bird.className = 'bird';
+    bird.textContent = ['🐦','🦋','🕊️'][Math.floor(Math.random()*3)];
+    bird.style.cssText = `
+      top:${Math.random()*40+10}%;
+      left:-60px;
+      animation-duration:${Math.random()*15+12}s;
+      animation-delay:${Math.random()*10}s;
+      font-size:${Math.random()*10+14}px;
+    `;
+    particlesDiv.appendChild(bird);
+  }
+  for (let i=0; i<6; i++) makeBird();
 }
 
-animate();
+// SPRING — cherry blossom petals
+if (season === 'spring') {
+  function makePetal() {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const colors = ['#ffb7c5','#ff9eb5','#ffc8d4','#ff85a1','#ffe0e8'];
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      top:-20px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${Math.random()*6+5}px;
+      height:${Math.random()*6+5}px;
+      animation-duration:${Math.random()*5+6}s;
+      animation-delay:${Math.random()*8}s;
+      opacity:0.85;
+    `;
+    particlesDiv.appendChild(p);
+  }
+  for (let i=0; i<35; i++) makePetal();
+}
+
+// SUMMER — sun rays + butterflies + heat particles
+if (season === 'summer') {
+  // Sun glow top right
+  const sun = document.createElement('div');
+  sun.style.cssText = `
+    position:absolute;
+    top:-60px; right:-60px;
+    width:200px; height:200px;
+    background:radial-gradient(circle, rgba(255,200,50,0.15) 0%, rgba(255,150,0,0.05) 50%, transparent 70%);
+    border-radius:50%;
+    animation: pulse 4s ease-in-out infinite;
+    pointer-events:none;
+  `;
+  particlesDiv.appendChild(sun);
+
+  function makeButterfly() {
+    const b = document.createElement('div');
+    b.className = 'butterfly';
+    b.textContent = ['🦋','🌟','✨'][Math.floor(Math.random()*3)];
+    b.style.cssText = `
+      top:${Math.random()*50+15}%;
+      left:-50px;
+      animation-duration:${Math.random()*18+14}s;
+      animation-delay:${Math.random()*12}s;
+      font-size:${Math.random()*8+12}px;
+    `;
+    particlesDiv.appendChild(b);
+  }
+  for (let i=0; i<5; i++) makeButterfly();
+
+  // Heat shimmer particles (gold dust)
+  for (let i=0; i<20; i++) {
+    const dust = document.createElement('div');
+    dust.style.cssText = `
+      position:absolute;
+      width:${Math.random()*3+1}px;
+      height:${Math.random()*3+1}px;
+      background:rgba(255,200,50,${Math.random()*0.4+0.1});
+      border-radius:50%;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      animation: float ${Math.random()*6+4}s ease-in-out infinite;
+      animation-delay:${Math.random()*5}s;
+      pointer-events:none;
+    `;
+    particlesDiv.appendChild(dust);
+  }
+}
+
+// AUTUMN — falling leaves + orange mist
+if (season === 'autumn') {
+  const leafColors = ['#d4581a','#e87722','#c94a00','#f0a500','#b83200','#e05c00'];
+
+  function makeLeaf() {
+    const l = document.createElement('div');
+    l.className = 'leaf';
+    l.style.cssText = `
+      left:${Math.random()*100}%;
+      top:-20px;
+      background:${leafColors[Math.floor(Math.random()*leafColors.length)]};
+      width:${Math.random()*10+8}px;
+      height:${Math.random()*7+5}px;
+      border-radius:${Math.random()>0.5 ? '50% 0' : '0 50%'};
+      animation-duration:${Math.random()*6+7}s;
+      animation-delay:${Math.random()*10}s;
+      opacity:0.9;
+    `;
+    particlesDiv.appendChild(l);
+  }
+  for (let i=0; i<40; i++) makeLeaf();
+
+  // Orange mist layers
+  for (let i=0; i<3; i++) {
+    const mist = document.createElement('div');
+    mist.className = 'mist';
+    mist.style.cssText = `
+      height:${Math.random()*80+60}px;
+      top:${20+i*25}%;
+      background:rgba(${180+i*20},${80+i*10},0,0.06);
+      animation-duration:${Math.random()*20+15}s;
+      animation-delay:${i*4}s;
+    `;
+    particlesDiv.appendChild(mist);
+  }
+}
+
+// WINTER — snowflakes + frost + cold mist
+if (season === 'winter') {
+  function makeSnow() {
+    const s = document.createElement('div');
+    s.className = 'snowflake';
+    const size = Math.random()*5+2;
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:-10px;
+      width:${size}px;
+      height:${size}px;
+      opacity:${Math.random()*0.7+0.3};
+      animation-duration:${Math.random()*6+6}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    particlesDiv.appendChild(s);
+  }
+  for (let i=0; i<60; i++) makeSnow();
+
+  // Cold blue mist
+  for (let i=0; i<4; i++) {
+    const mist = document.createElement('div');
+    mist.className = 'mist';
+    mist.style.cssText = `
+      height:${Math.random()*100+80}px;
+      top:${15+i*20}%;
+      background:rgba(100,150,255,0.04);
+      animation-duration:${Math.random()*25+18}s;
+      animation-delay:${i*5}s;
+    `;
+    particlesDiv.appendChild(mist);
+  }
+
+  // Frost corner overlays
+  const frost = document.createElement('div');
+  frost.className = 'frost';
+  frost.style.cssText = `
+    background:
+      radial-gradient(ellipse at top left, rgba(150,200,255,0.12) 0%, transparent 40%),
+      radial-gradient(ellipse at bottom right, rgba(100,180,255,0.1) 0%, transparent 40%);
+  `;
+  frostLayer.appendChild(frost);
+}
+
+// Gold floating dust (all seasons)
+for (let i=0; i<15; i++) {
+  const dust = document.createElement('div');
+  dust.style.cssText = `
+    position:absolute;
+    width:${Math.random()*2+1}px;
+    height:${Math.random()*2+1}px;
+    background:rgba(212,175,55,${Math.random()*0.3+0.1});
+    border-radius:50%;
+    left:${Math.random()*100}%;
+    top:${Math.random()*100}%;
+    animation: float ${Math.random()*8+5}s ease-in-out infinite;
+    animation-delay:${Math.random()*6}s;
+    pointer-events:none;
+  `;
+  particlesDiv.appendChild(dust);
+}
 </script>
 </body>
 </html>
