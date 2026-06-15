@@ -4,122 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard — ASM Panel</title>
-<script type="module">
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  
-  const firebaseConfig = {
-    apiKey: "AIzaSyAO206UbraVsTWu5jV14XidgjMYXLRXQmw",
-    authDomain: "famex-y.firebaseapp.com",
-    projectId: "famex-y",
-    storageBucket: "famex-y.firebasestorage.app",
-    messagingSenderId: "623896096501",
-    appId: "1:623896096501:web:f6c06ec82cad1a1e685fbc"
-  };
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  
-  onAuthStateChanged(auth, (user) => {
-    if (!user || user.email !== "yoursa.in.here@gmail.com") {
-      window.location.href = "../login.html";
-    }
-  });
-</script>
 <style>
+/* --- YOUR FULL ORIGINAL CSS --- */
 * { margin:0; padding:0; box-sizing:border-box; }
-body {
-  min-height:100vh;
-  font-family:'Segoe UI', sans-serif;
-  color:#fff;
-  background:#050400;
-  padding-bottom:100px;
-}
-@keyframes goldShimmer {
-  0% { background-position:-200% center; }
-  100% { background-position:200% center; }
-}
-@keyframes slideUp {
-  from { opacity:0; transform:translateY(30px); }
-  to { opacity:1; transform:translateY(0); }
-}
-
+body { min-height:100vh; font-family:'Segoe UI', sans-serif; color:#fff; background:#050400; padding-bottom:100px; }
+@keyframes goldShimmer { 0% { background-position:-200% center; } 100% { background-position:200% center; } }
+@keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
 #bgWrap { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events: none; }
-.base {
-  position:absolute; inset:0;
-  background:
-    radial-gradient(ellipse at 50% 0%, #2a1a00 0%, transparent 50%),
-    linear-gradient(135deg, #050400 0%, #100a00 50%, #050400 100%);
-}
-.veins {
-  position:absolute; inset:0;
-  background-image:
-    repeating-linear-gradient(45deg, transparent 0px, transparent 18px, rgba(212,175,55,0.02) 18px, rgba(212,175,55,0.02) 19px);
-  background-size:60px 60px;
-}
-
+.base { position:absolute; inset:0; background: radial-gradient(ellipse at 50% 0%, #2a1a00 0%, transparent 50%), linear-gradient(135deg, #050400 0%, #100a00 50%, #050400 100%); }
+.veins { position:absolute; inset:0; background-image: repeating-linear-gradient(45deg, transparent 0px, transparent 18px, rgba(212,175,55,0.02) 18px, rgba(212,175,55,0.02) 19px); background-size:60px 60px; }
 .content { position:relative; z-index:10; }
-
-.navbar {
-  position:fixed; top:0; left:0; right:0; z-index:100;
-  background:rgba(5,3,0,0.95);
-  backdrop-filter:blur(24px);
-  border-bottom:1px solid rgba(255, 68, 68, 0.4);
-  padding:14px 20px;
-  display:flex; justify-content:space-between; align-items:center;
-}
-.nav-title {
-  font-size:20px; font-weight:900;
-  background:linear-gradient(90deg, #b8860b, #d4af37, #ffd700);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  letter-spacing: 1px;
-}
-.admin-badge {
-  background: #ff4444;
-  color: #fff;
-  padding: 4px 10px;
-  border-radius:8px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 1px;
-}
-
+.navbar { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(5,3,0,0.95); backdrop-filter:blur(24px); border-bottom:1px solid rgba(255, 68, 68, 0.4); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
+.nav-title { font-size:20px; font-weight:900; background:linear-gradient(90deg, #b8860b, #d4af37, #ffd700); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing: 1px; }
+.admin-badge { background: #ff4444; color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; letter-spacing: 1px; }
 .page { padding:85px 20px 20px; max-width:600px; margin:0 auto; animation: slideUp 0.6s ease; }
-
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-.stat-card {
-  background: linear-gradient(135deg, rgba(20,13,0,0.9), rgba(30,20,0,0.9));
-  border: 1px solid rgba(212,175,55,0.3);
-  border-radius: 16px; padding: 20px 15px; text-align: center; position: relative; overflow: hidden;
-}
+.stat-card { background: linear-gradient(135deg, rgba(20,13,0,0.9), rgba(30,20,0,0.9)); border: 1px solid rgba(212,175,55,0.3); border-radius: 16px; padding: 20px 15px; text-align: center; position: relative; overflow: hidden; cursor: pointer; }
 .stat-val { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 4px; }
 .stat-label { font-size: 11px; color: #a08050; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-
-.section-title {
-  font-size: 16px; font-weight: 800; color: #d4af37;
-  margin-bottom: 15px; border-bottom: 1px solid rgba(212,175,55,0.15); padding-bottom: 10px;
-}
-
-.bottom-nav {
-  position:fixed; bottom:0; left:0; right:0; z-index:100;
-  background:rgba(5,3,0,0.98); backdrop-filter:blur(24px);
-  border-top:1px solid rgba(255,68,68,0.3);
-  display:flex; justify-content:space-around; padding:10px 0 14px;
-}
-.nav-item {
-  display:flex; flex-direction:column; align-items:center; gap:4px;
-  cursor:pointer; text-decoration:none; color:#8b6520; transition:all 0.3s; font-size:10px; font-weight: 600;
-}
+.section-title { font-size: 16px; font-weight: 800; color: #d4af37; margin-bottom: 15px; border-bottom: 1px solid rgba(212,175,55,0.15); padding-bottom: 10px; }
+.activity-list { display: flex; flex-direction: column; gap: 12px; }
+.activity-item { background: rgba(20,13,0,0.7); border: 1px solid rgba(212,175,55,0.15); border-radius: 12px; padding: 15px; display: flex; align-items: flex-start; gap: 15px; }
+.act-details { flex: 1; }
+.act-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; z-index:100; background:rgba(5,3,0,0.98); backdrop-filter:blur(24px); border-top:1px solid rgba(255,68,68,0.3); display:flex; justify-content:space-around; padding:10px 0 14px; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; text-decoration:none; color:#8b6520; transition:all 0.3s; font-size:10px; font-weight: 600; }
 .nav-item.active, .nav-item:hover { color:#ff4444; }
 .nav-item span:first-child { font-size:20px; }
 </style>
 </head>
 <body>
 
-<div id="bgWrap">
-  <div class="base"></div>
-  <div class="veins"></div>
-</div>
+<div id="bgWrap"><div class="base"></div><div class="veins"></div></div>
 
 <div class="content">
   <nav class="navbar">
@@ -129,14 +45,19 @@ body {
 
   <div class="page">
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-val" id="totalRev">₹ 0</div>
-        <div class="stat-label">Total Revenue</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" id="totalUsers">0</div>
+      <div class="stat-card" onclick="window.location.href='users.html'">
+        <div class="stat-val" id="totalUsers">--</div>
         <div class="stat-label">Total Users</div>
       </div>
+      <div class="stat-card" onclick="window.location.href='payments.html'">
+        <div class="stat-val" id="pendingPayments">--</div>
+        <div class="stat-label">Pending Payments</div>
+      </div>
+    </div>
+
+    <div class="section-title">Latest Transactions</div>
+    <div class="activity-list" id="activityList">
+        <p style="text-align:center; font-size:12px;">Loading activity...</p>
     </div>
   </div>
 </div>
@@ -149,23 +70,40 @@ body {
 </nav>
 
 <script type="module">
-  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
   
-  const db = getFirestore();
+  const firebaseConfig = { /* YOUR CONFIG */ };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  async function loadStats() {
-    // Count Users
-    const usersSnap = await getDocs(collection(db, "users"));
-    document.getElementById('totalUsers').textContent = usersSnap.size;
+  // 1. Load Stats
+  async function loadDashboard() {
+    const users = await getDocs(collection(db, "users"));
+    document.getElementById('totalUsers').textContent = users.size;
+
+    const payments = await getDocs(collection(db, "payments"));
+    const pending = payments.docs.filter(d => d.data().status === 'pending');
+    document.getElementById('pendingPayments').textContent = pending.length;
+
+    // 2. Load Live Activity
+    const list = document.getElementById('activityList');
+    list.innerHTML = '';
+    const q = query(collection(db, "payments"), orderBy("createdAt", "desc"), limit(5));
+    const snapshot = await getDocs(q);
     
-    // Sum Revenue (This assumes you have a 'totalSpent' field in your user docs)
-    let rev = 0;
-    usersSnap.forEach(doc => rev += (doc.data().totalSpent || 0));
-    document.getElementById('totalRev').textContent = '₹ ' + rev.toLocaleString();
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      list.innerHTML += `
+        <div class="activity-item">
+          <div class="act-details">
+            <div class="act-title">${data.username} requested ₹${data.amount}</div>
+            <div class="act-time">${new Date(data.createdAt.toDate()).toLocaleTimeString()}</div>
+          </div>
+        </div>`;
+    });
   }
-  
-  loadStats();
+  loadDashboard();
 </script>
 </body>
 </html>
