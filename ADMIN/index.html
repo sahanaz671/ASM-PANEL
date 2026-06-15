@@ -5,56 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard — ASM Panel</title>
 <style>
-/* --- STABLE CSS BASE --- */
-* { margin:0; padding:0; box-sizing:border-box; }
-body { min-height:100vh; font-family:'Segoe UI', sans-serif; color:#fff; background:#050400; padding-bottom:100px; }
-#bgWrap { position:fixed; inset:0; z-index:0; pointer-events:none; }
-.base { position:absolute; inset:0; background: radial-gradient(ellipse at 50% 0%, #2a1a00 0%, transparent 50%), linear-gradient(135deg, #050400 0%, #100a00 50%, #050400 100%); }
-.navbar { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(5,3,0,0.95); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255, 68, 68, 0.4); }
-.page { padding:85px 20px 20px; max-width:600px; margin:0 auto; }
-.card { background: rgba(20,13,0,0.9); border: 1px solid #d4af37; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
-button { padding: 10px 20px; background: #d4af37; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    /* Keep your existing 500 lines of CSS here */
+    body { background: #050400; color: #fff; font-family: sans-serif; }
+    .navbar { display:flex; justify-content:space-between; padding:20px; background: #000; }
 </style>
 </head>
 <body>
-
-<div id="bgWrap"><div class="base"></div></div>
-
-<div class="content">
-  <nav class="navbar">
-    <div style="font-weight:900; color:#d4af37;">⚡ ASM PANEL</div>
-    <div style="background:#ff4444; padding:4px 10px; border-radius:8px; font-size:10px;">ADMIN</div>
-  </nav>
-
-  <div class="page">
-    <div class="card">
-      <h2 style="margin-bottom:10px;">Service Control</h2>
-      <input id="sName" placeholder="Service Name" style="width:100%; padding:10px; margin-bottom:10px; background:#000; border:1px solid #d4af37; color:#fff;">
-      <input id="sPrice" placeholder="Price" style="width:100%; padding:10px; margin-bottom:10px; background:#000; border:1px solid #d4af37; color:#fff;">
-      <button onclick="syncService()">Add to Database</button>
+    <nav class="navbar">
+        <div>⚡ ASM PANEL</div>
+        <div style="background:#ff4444; padding:5px 10px;">ADMIN</div>
+    </nav>
+    <div style="padding:50px; text-align:center;">
+        <h1>Dashboard Loading...</h1>
     </div>
-  </div>
-</div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-  const firebaseConfig = { apiKey: "AIzaSyAO206UbraVsTWu5jV14XidgjMYXLRXQmw", authDomain: "famex-y.firebaseapp.com", projectId: "famex-y", storageBucket: "famex-y.firebasestorage.app", messagingSenderId: "623896096501", appId: "1:623896096501:web:f6c06ec82cad1a1e685fbc" };
-
-  try {
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    
-    window.syncService = async () => {
-      const name = document.getElementById('sName').value;
-      const price = document.getElementById('sPrice').value;
-      await addDoc(collection(db, "services"), { name, price });
-      alert("Synced!");
-    };
-  } catch (error) {
-    console.error("Firebase failed to load, but the page UI is still working:", error);
-  }
-</script>
 </body>
 </html>
