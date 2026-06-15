@@ -1,1 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up — ASM Panel</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
+body {
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  background: #0a0800;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+@keyframes goldShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 20px #d4af3744; }
+  50% { box-shadow: 0 0 45px #d4af37aa; }
+}
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(40px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes shimmerLine {
+  0% { left:-100%; }
+  100% { left:200%; }
+}
+@keyframes textureMove {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+@keyframes orbFloat {
+  0%,100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+
+/* Background */
+#bgWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, #3d2a00 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, #2a1a00 0%, transparent 50%),
+    linear-gradient(135deg, #0d0800 0%, #1a1000 25%, #0f0900 50%, #1f1500 75%, #0a0600 100%);
+  animation: textureMove 20s ease-in-out infinite;
+  background-size: 400% 400%;
+}
+.veins {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0px, transparent 18px, rgba(212,175,55,0.03) 18px, rgba(212,175,55,0.03) 19px),
+    repeating-linear-gradient(-45deg, transparent 0px, transparent 28px, rgba(180,140,40,0.025) 28px, rgba(180,140,40,0.025) 29px);
+  background-size: 60px 60px, 80px 80px;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  animation: orbFloat ease-in-out infinite;
+}
+.orb1 { width:300px; height:300px; background:radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%); top:-80px; left:-60px; animation-duration:12s; }
+.orb2 { width:250px; height:250px; background:radial-gradient(circle, rgba(255,200,50,0.07) 0%, transparent 70%); bottom:10%; right:-40px; animation-duration:15s; animation-delay:4s; }
+
+/* Page content */
+.page {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 420px;
+  animation: slideUp 0.8s ease;
+}
+
+/* Logo header */
+.logo-wrap {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.logo {
+  font-size: 26px;
+  font-weight: 900;
+  background: linear-gradient(90deg, #b8860b, #d4af37, #ffd700, #ffe566, #d4af37, #b8860b);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldShimmer 2.5s linear infinite;
+  letter-spacing: 3px;
+}
+.logo-sub {
+  color: #5a3e15;
+  font-size: 12px;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+/* Card */
+.card {
+  background: linear-gradient(135deg, rgba(15,10,0,0.92), rgba(28,18,0,0.92));
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 24px;
+  padding: 30px 24px;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  animation: pulse 3s infinite;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffd700, #d4af37, #ffd700, transparent);
+  animation: goldShimmer 2s linear infinite;
+  background-size: 200% auto;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.04), transparent);
+  animation: shimmerLine 4s linear infinite;
+}
+
+.card-title {
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 6px;
+  background: linear-gradient(90deg, #d4af37, #ffd700, #ffe566);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.card-sub {
+  text-align: center;
+  color: #5a3e15;
+  font-size: 12px;
+  margin-bottom: 25px;
+}
+
+/* Profile photo upload */
+.photo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 22px;
+}
+.photo-circle {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  border: 2px solid rgba(212,175,55,0.5);
+  background: linear-gradient(135deg, rgba(30,20,0,0.9), rgba(50,35,0,0.9));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  animation: float 4s ease-in-out infinite;
+}
+.photo-circle:hover {
+  border-color: #d4af37;
+  box-shadow: 0 0 25px rgba(212,175,55,0.4);
+}
+.photo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: none;
+}
+.photo-label {
+  color: #6b5020;
+  font-size: 11px;
+  margin-top: 8px;
+}
+#photoInput { display: none; }
+
+/* Input groups */
+.input-group {
+  margin-bottom: 16px;
+}
+.input-label {
+  font-size: 12px;
+  color: #8b6520;
+  margin-bottom: 6px;
+  display: block;
+  letter-spacing: 0.5px;
+}
+.input-wrap {
+  position: relative;
+}
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+}
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 13px 14px 13px 42px;
+  background: rgba(20,13,0,0.8);
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s;
+  font-family: 'Segoe UI', sans-serif;
+}
+input:focus {
+  border-color: rgba(212,175,55,0.6);
+  box-shadow: 0 0 15px rgba(212,175,55,0.15);
+  background: rgba(30,20,0,0.9);
+}
+input::placeholder { color: #3a2a08; }
+
+/* Referral field */
+.referral-row {
+  display: flex;
+  gap: 8px;
+}
+.referral-row input { flex: 1; }
+.ref-badge {
+  padding: 0 14px;
+  background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 12px;
+  color: #d4af37;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Terms */
+.terms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.terms-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  accent-color: #d4af37;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.terms-text {
+  font-size: 11px;
+  color: #5a3e15;
+  line-height: 1.5;
+}
+.terms-text a { color: #d4af37; text-decoration: none; }
+
+/* Submit button */
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #8b6914, #d4af37, #ffd700, #d4af37);
+  background-size: 200% auto;
+  animation: goldShimmer 3s linear infinite;
+  color: #000;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 25px rgba(212,175,55,0.4), 0 5px 20px rgba(0,0,0,0.5);
+  letter-spacing: 1px;
+}
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(212,175,55,0.6);
+}
+.btn-submit:active { transform: scale(0.98); }
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(212,175,55,0.15);
+}
+.divider-text { color: #3a2a08; font-size: 11px; }
+
+/* Login link */
+.login-link {
+  text-align: center;
+  font-size: 13px;
+  color: #5a3e15;
+}
+.login-link a {
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* Rank preview */
+.rank-preview {
+  margin: 20px 0;
+  background: rgba(10,7,0,0.6);
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.rank-icon { font-size: 24px; animation: float 3s ease-in-out infinite; }
+.rank-info { flex: 1; }
+.rank-name { font-size: 13px; font-weight: 700; color: #d4af37; }
+.rank-desc { font-size: 11px; color: #5a3e15; margin-top: 2px; }
+
+/* Success message */
+.success-msg {
+  display: none;
+  text-align: center;
+  padding: 20px;
+}
+.success-icon { font-size: 60px; animation: float 2s ease-in-out infinite; margin-bottom: 15px; }
+.success-title { font-size: 22px; font-weight: 800; color: #d4af37; margin-bottom: 8px; }
+.success-sub { color: #5a3e15; font-size: 13px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div id="bgWrap">
+  <div class="base"></div>
+  <div class="veins"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+</div>
+
+<div class="page">
+  <div class="logo-wrap">
+    <div class="logo">⚡ ASM PANEL</div>
+    <div class="logo-sub">Premium SMM Services</div>
+  </div>
+
+  <div class="card">
+    <div id="formSection">
+      <div class="card-title">Create Account</div>
+      <div class="card-sub">Join thousands of users growing their social media</div>
+
+      <!-- Profile photo -->
+      <div class="photo-upload">
+        <div class="photo-circle" onclick="document.getElementById('photoInput').click()">
+          <span id="photoEmoji">📸</span>
+          <img id="photoPreview" src="" alt="">
+        </div>
+        <div class="photo-label">Tap to upload profile photo</div>
+        <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
+      </div>
+
+      <!-- Full name -->
+      <div class="input-group">
+        <label class="input-label">Full Name</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="fullName" placeholder="Enter your full name">
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div class="input-group">
+        <label class="input-label">Username</label>
+        <div class="input-wrap">
+          <span class="input-icon">@</span>
+          <input type="text" id="username" placeholder="Choose a username" oninput="checkUsername(this)">
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="input-group">
+        <label class="input-label">Email Address</label>
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input type="email" id="email" placeholder="Enter your email">
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <label class="input-label">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="password" placeholder="Create a strong password">
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="input-group">
+        <label class="input-label">Confirm Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="confirmPass" placeholder="Confirm your password">
+        </div>
+      </div>
+
+      <!-- Referral code -->
+      <div class="input-group">
+        <label class="input-label">Referral Code (Optional)</label>
+        <div class="referral-row">
+          <div class="input-wrap" style="flex:1">
+            <span class="input-icon">🎁</span>
+            <input type="text" id="referral" placeholder="Enter referral code">
+          </div>
+          <div class="ref-badge">+10%</div>
+        </div>
+      </div>
+
+      <!-- Rank preview -->
+      <div class="rank-preview">
+        <div class="rank-icon">🥉</div>
+        <div class="rank-info">
+          <div class="rank-name">Starting Rank: Bronze</div>
+          <div class="rank-desc">Spend ₹50 to reach Silver 🥈</div>
+        </div>
+      </div>
+
+      <!-- Terms -->
+      <div class="terms-row">
+        <input type="checkbox" id="terms">
+        <label class="terms-text" for="terms">
+          I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> of ASM Panel
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn-submit" onclick="handleSignup()">🚀 Create My Account</button>
+
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">Already have an account?</div>
+        <div class="divider-line"></div>
+      </div>
+
+      <div class="login-link">
+        <a href="login.html">👋 Login to ASM Panel</a>
+      </div>
+    </div>
+
+    <!-- Success screen -->
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Welcome to ASM Panel!</div>
+      <div class="success-sub">Your account has been created successfully.<br>Redirecting to login...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function previewPhoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const preview = document.getElementById('photoPreview');
+    const emoji = document.getElementById('photoEmoji');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    emoji.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function checkUsername(input) {
+  const val = input.value.replace(/[^a-zA-Z0-9_]/g, '');
+  input.value = val;
+}
+
+function handleSignup() {
+  const fullName = document.getElementById('fullName').value.trim();
+  const username = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const confirmPass = document.getElementById('confirmPass').value;
+  const terms = document.getElementById('terms').checked;
+
+  if (!fullName) { alert('Please enter your full name'); return; }
+  if (!username) { alert('Please choose a username'); return; }
+  if (!email) { alert('Please enter your email'); return; }
+  if (password.length < 6) { alert('Password must be at least 6 characters'); return; }
+  if (password !== confirmPass) { alert('Passwords do not match'); return; }
+  if (!terms) { alert('Please accept the terms and conditions'); return; }
+
+  // Show success (Firebase will be connected later)
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
+
+  setTimeout(() => {
+    window.location.href = 'login.html';
+  }, 2500);
+}
+</script>
+</body>
+</html>
