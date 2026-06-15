@@ -1,120 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard — ASM Panel</title>
-<script type="module">
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  const firebaseConfig = { apiKey: "AIzaSyAO206UbraVsTWu5jV14XidgjMYXLRXQmw", authDomain: "famex-y.firebaseapp.com", projectId: "famex-y", storageBucket: "famex-y.firebasestorage.app", messagingSenderId: "623896096501", appId: "1:623896096501:web:f6c06ec82cad1a1e685fbc" };
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  onAuthStateChanged(auth, (user) => {
-    if (!user || user.email !== "yoursa.in.here@gmail.com") { window.location.href = "../login.html"; }
-  });
-</script>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { min-height:100vh; font-family:'Segoe UI', sans-serif; color:#fff; background:#050400; padding-bottom:100px; }
-#bgWrap { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events: none; }
-.base { position:absolute; inset:0; background: radial-gradient(ellipse at 50% 0%, #2a1a00 0%, transparent 50%), linear-gradient(135deg, #050400 0%, #100a00 50%, #050400 100%); }
-.veins { position:absolute; inset:0; background-image: repeating-linear-gradient(45deg, transparent 0px, transparent 18px, rgba(212,175,55,0.02) 18px, rgba(212,175,55,0.02) 19px); background-size:60px 60px; }
-.content { position:relative; z-index:10; }
-.navbar { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(5,3,0,0.95); backdrop-filter:blur(24px); border-bottom:1px solid rgba(255, 68, 68, 0.4); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
-.nav-title { font-size:20px; font-weight:900; background:linear-gradient(90deg, #b8860b, #d4af37, #ffd700); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.tab-section { display: none; padding: 85px 20px 20px; max-width:600px; margin:0 auto; }
-.tab-active { display: block; }
-.card { background: rgba(20,13,0,0.9); border: 1px solid #d4af37; border-radius: 12px; padding: 15px; margin-bottom: 10px; }
-input { width: 100%; padding: 8px; margin: 5px 0; background: #000; color: #fff; border: 1px solid #d4af37; border-radius: 6px; }
-button { padding: 8px 12px; cursor: pointer; background: #d4af37; border: none; border-radius: 6px; font-weight: bold; }
-.btn-red { background: #ff4444; color: white; }
-.bottom-nav { position:fixed; bottom:0; left:0; right:0; z-index:100; background:rgba(5,3,0,0.98); padding:10px 0; display:flex; justify-content:space-around; border-top:1px solid #d4af37; }
-</style>
-</head>
-<body>
-<div id="bgWrap"><div class="base"></div><div class="veins"></div></div>
-<div class="content">
-  <nav class="navbar"><div class="nav-title">⚡ ASM MASTER PANEL</div></nav>
-
-  <!-- Dashboard Tab -->
-  <div id="dashboard" class="tab-section tab-active">
-    <h2>Dashboard</h2>
-    <div class="card" id="stats">Loading Stats...</div>
-  </div>
-
-  <!-- Services Tab -->
-  <div id="services" class="tab-section">
-    <h2>Manage Services</h2>
-    <div class="card">
-      <input id="sName" placeholder="Service Name">
-      <input id="sPrice" placeholder="Price">
-      <button onclick="addService()">Add Service</button>
-    </div>
-    <div id="servicesList"></div>
-  </div>
-
-  <!-- Users Tab -->
-  <div id="users" class="tab-section">
-    <h2>User Control</h2>
-    <div id="usersList"></div>
-  </div>
-</div>
-
-<nav class="bottom-nav">
-  <button onclick="switchTab('dashboard')">Dash</button>
-  <button onclick="switchTab('services')">Services</button>
-  <button onclick="switchTab('users')">Users</button>
-</nav>
-
-<script type="module">
-  import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-  const db = getFirestore();
-
-  window.switchTab = (id) => {
-    document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('tab-active'));
-    document.getElementById(id).classList.add('tab-active');
-  };
-
-  // Service Logic
-  window.addService = async () => {
-    await addDoc(collection(db, "services"), { name: document.getElementById('sName').value, price: document.getElementById('sPrice').value });
-    alert("Saved!");
-    loadServices();
-  };
-
-  async function loadServices() {
-    const list = document.getElementById('servicesList');
-    list.innerHTML = '';
-    const snap = await getDocs(collection(db, "services"));
-    snap.forEach(d => {
-      list.innerHTML += `<div class="card">${d.data().name} - ${d.data().price} <button class="btn-red" onclick="deleteService('${d.id}')">Delete</button></div>`;
+window.addService = async () => {
+    await addDoc(collection(db, "services"), {
+        name: document.getElementById('sName').value,
+        price: document.getElementById('sPrice').value,
+        category: document.getElementById('sCat').value,
+        desc: document.getElementById('sDesc').value,
+        min: document.getElementById('sMin').value,
+        max: document.getElementById('sMax').value,
+        emoji: document.getElementById('sEmoji').value,
+        icon: document.getElementById('sIcon').value,
+        popular: true 
     });
-  }
-
-  window.deleteService = async (id) => {
-    await deleteDoc(doc(db, "services", id));
-    loadServices();
-  };
-
-  // User Logic
-  async function loadUsers() {
-    const list = document.getElementById('usersList');
-    const snap = await getDocs(collection(db, "users"));
-    snap.forEach(d => {
-      list.innerHTML += `<div class="card">${d.data().username || 'User'} 
-        <button onclick="toggleStatus('${d.id}', 'banned')">Ban</button> 
-        <button onclick="toggleStatus('${d.id}', 'ghost')">Ghost</button></div>`;
-    });
-  }
-
-  window.toggleStatus = async (id, field) => {
-    // Basic toggle logic
-    alert("Toggled " + field + " for " + id);
-  };
-
-  loadServices();
-  loadUsers();
-</script>
-</body>
-</html>
+    alert("Service synced to Main Panel!");
+};
