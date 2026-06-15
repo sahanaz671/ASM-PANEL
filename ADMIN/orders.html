@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Orders — Admin Panel</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  min-height:100vh;
+  font-family:'Segoe UI', sans-serif;
+  color:#fff;
+  background:#050400; 
+  padding-bottom:100px;
+}
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(30px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* Background Texture */
+#bgWrap { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events: none; }
+.base {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 50% 0%, #2a1a00 0%, transparent 50%),
+    linear-gradient(135deg, #050400 0%, #100a00 50%, #050400 100%);
+}
+
+.content { position:relative; z-index:10; }
+
+/* Admin Navbar */
+.navbar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(5,3,0,0.95);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(255, 68, 68, 0.4); 
+  padding:14px 20px;
+  display:flex; align-items:center; gap: 15px;
+}
+.nav-title {
+  font-size:18px; font-weight:900;
+  background:linear-gradient(90deg, #b8860b, #d4af37, #ffd700);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  flex: 1;
+}
+.admin-badge {
+  background: #ff4444; color: #fff; padding: 4px 10px;
+  border-radius: 8px; font-size: 10px; font-weight: 900; letter-spacing: 1px;
+}
+
+.page { padding:85px 20px 20px; max-width:600px; margin:0 auto; animation: slideUp 0.6s ease; }
+
+/* Filter Tabs */
+.filter-tabs {
+  display:flex; gap:10px; overflow-x:auto; padding-bottom:10px; margin-bottom:20px;
+  scrollbar-width:none;
+}
+.filter-tabs::-webkit-scrollbar { display:none; }
+.tab-btn {
+  padding:8px 16px;
+  background:rgba(20,13,0,0.8);
+  border:1px solid rgba(212,175,55,0.3);
+  border-radius:20px;
+  color:#d4af37; font-size:13px; font-weight:600;
+  white-space:nowrap; cursor:pointer; transition:all 0.3s;
+}
+.tab-btn.active {
+  background:#ff4444; color:#fff; border-color:#ff8888;
+  box-shadow:0 0 15px rgba(255,68,68,0.4);
+}
+
+/* Order Cards */
+.order-list { display:flex; flex-direction:column; gap:16px; }
+
+.order-card {
+  background: linear-gradient(135deg, rgba(20,13,0,0.9), rgba(30,20,0,0.9));
+  border:1px solid rgba(212,175,55,0.25);
+  border-radius:16px; padding:18px;
+}
+.oc-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid rgba(212,175,55,0.1);
+}
+.oc-id { font-size:14px; font-weight:800; color:#ffd700; }
+.oc-user { font-size:12px; color:#8b6520; font-weight: 700; }
+
+.oc-service {
+  font-size:14px; font-weight:700; color:#fff; margin-bottom:12px; line-height:1.4;
+}
+
+.oc-details {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  background:rgba(0,0,0,0.4); padding:12px;
+  border-radius:10px; margin-bottom:15px; border: 1px solid rgba(212,175,55,0.05);
+}
+.detail-item { display:flex; flex-direction:column; gap:4px; }
+.detail-label { font-size:10px; color:#8b6520; text-transform:uppercase; letter-spacing:0.5px; }
+.detail-val { font-size:12px; font-weight:700; color:#e8c87a; }
+.val-link { color:#4DA6FF; text-decoration:underline; word-break:break-all; }
+
+/* Status Labels & Action Buttons */
+.card-actions {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.status-badge {
+  padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+}
+.status-pending { background:rgba(255,170,0,0.15); color:#ffaa00; border: 1px solid #ffaa00; }
+.status-processing { background:rgba(0,170,255,0.15); color:#00aaff; border: 1px solid #00aaff; }
+.status-completed { background:rgba(0,255,100,0.15); color:#00ff64; border: 1px solid #00ff64; }
+
+.action-btns { display: flex; gap: 8px; }
+.btn-update {
+  padding: 6px 12px; border: none; border-radius: 6px;
+  font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.3s;
+}
+.btn-process { background: #00aaff; color: #fff; }
+.btn-process:hover { box-shadow: 0 0 10px rgba(0,170,255,0.5); }
+.btn-complete { background: #00ff64; color: #000; }
+.btn-complete:hover { box-shadow: 0 0 10px rgba(0,255,100,0.5); }
+
+/* Admin Bottom Nav */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  background:rgba(5,3,0,0.98); backdrop-filter:blur(24px);
+  border-top:1px solid rgba(255,68,68,0.3);
+  display:flex; justify-content:space-around; padding:10px 0 14px;
+}
+.nav-item {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  cursor:pointer; text-decoration:none; color:#8b6520; transition:all 0.3s; font-size:10px; font-weight: 600;
+}
+.nav-item.active, .nav-item:hover { color:#ff4444; }
+.nav-item span:first-child { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div id="bgWrap">
+  <div class="base"></div>
+  <div class="veins"></div>
+</div>
+
+<div class="content">
+  <nav class="navbar">
+    <div class="nav-title">Manage Orders</div>
+    <div class="admin-badge">ADMIN</div>
+  </nav>
+
+  <div class="page">
+    
+    <div class="filter-tabs">
+      <div class="tab-btn active" onclick="filterOrders('all', this)">All Orders</div>
+      <div class="tab-btn" onclick="filterOrders('pending', this)">Pending (1)</div>
+      <div class="tab-btn" onclick="filterOrders('processing', this)">Processing (1)</div>
+      <div class="tab-btn" onclick="filterOrders('completed', this)">Completed (1)</div>
+    </div>
+
+    <div class="order-list">
+      
+      <div class="order-card" data-status="pending">
+        <div class="oc-header">
+          <span class="oc-id">#ASM82741</span>
+          <span class="oc-user">@viral_star</span>
+        </div>
+        <div class="oc-service">📸 ID: 101 - IG Followers [HQ Real]</div>
+        <div class="oc-details">
+          <div class="detail-item">
+            <span class="detail-label">Quantity</span>
+            <span class="detail-val">5,000</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Charge</span>
+            <span class="detail-val">₹ 225.00</span>
+          </div>
+          <div class="detail-item" style="grid-column: span 2;">
+            <span class="detail-label">Link</span>
+            <a href="#" class="detail-val val-link">https://instagram.com/viral_star_profile</a>
+          </div>
+        </div>
+        <div class="card-actions">
+          <span class="status-badge status-pending">⏳ Pending</span>
+          <div class="action-btns">
+            <button class="btn-update btn-process" onclick="alert('Status updated to Processing!')">Mark Processing</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-card" data-status="processing">
+        <div class="oc-header">
+          <span class="oc-id">#ASM82705</span>
+          <span class="oc-user">@rahul_99</span>
+        </div>
+        <div class="oc-service">▶️ ID: 305 - YouTube Views [Non-Drop]</div>
+        <div class="oc-details">
+          <div class="detail-item">
+            <span class="detail-label">Quantity</span>
+            <span class="detail-val">1,000</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Charge</span>
+            <span class="detail-val">₹ 120.00</span>
+          </div>
+          <div class="detail-item" style="grid-column: span 2;">
+            <span class="detail-label">Link</span>
+            <a href="#" class="detail-val val-link">https://youtube.com/watch?v=xyz123</a>
+          </div>
+        </div>
+        <div class="card-actions">
+          <span class="status-badge status-processing">⚙️ Processing</span>
+          <div class="action-btns">
+            <button class="btn-update btn-complete" onclick="alert('Status updated to Completed!')">Mark Completed</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-card" data-status="completed">
+        <div class="oc-header">
+          <span class="oc-id">#ASM82650</span>
+          <span class="oc-user">@new_client</span>
+        </div>
+        <div class="oc-service">❤️ ID: 204 - IG Likes [Indian Real]</div>
+        <div class="oc-details">
+          <div class="detail-item">
+            <span class="detail-label">Quantity</span>
+            <span class="detail-val">500</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Charge</span>
+            <span class="detail-val">₹ 7.75</span>
+          </div>
+          <div class="detail-item" style="grid-column: span 2;">
+            <span class="detail-label">Link</span>
+            <a href="#" class="detail-val val-link">https://instagram.com/p/abc</a>
+          </div>
+        </div>
+        <div class="card-actions">
+          <span class="status-badge status-completed">✅ Completed</span>
+          <div class="action-btns">
+            </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item"><span>📊</span><span>Dash</span></a>
+  <a href="orders.html" class="nav-item active"><span>📦</span><span>Orders</span></a>
+  <a href="payments.html" class="nav-item"><span>💰</span><span>Payments</span></a>
+  <a href="users.html" class="nav-item"><span>👥</span><span>Users</span></a>
+</nav>
+
+<script>
+  function filterOrders(status, btnElement) {
+    // Highlight the active tab
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+
+    // Show/hide cards based on status
+    const cards = document.querySelectorAll('.order-card');
+    cards.forEach(card => {
+      if (status === 'all' || card.getAttribute('data-status') === status) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+</body>
+</html>
