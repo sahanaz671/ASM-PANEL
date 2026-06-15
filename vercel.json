@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/ASM-PANEL/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/ASM-PANEL/$1"
+    }
   ]
 }
