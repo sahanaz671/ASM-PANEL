@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Edit Services — ASM Admin</title>
+<style>
+/* Keeping your Admin UI theme */
+body { background:#050400; color:#fff; font-family:'Segoe UI', sans-serif; padding:20px; }
+.card { background: rgba(20,13,0,0.8); border: 1px solid #d4af37; border-radius:12px; padding:20px; margin-bottom:15px; }
+input { width:100%; padding:10px; margin:5px 0; background:#000; color:#fff; border:1px solid #d4af37; border-radius:6px; }
+button { padding:10px 15px; cursor:pointer; border:none; border-radius:6px; font-weight:bold; }
+.btn-save { background:#d4af37; color:#000; }
+.btn-del { background:#ff4444; color:#fff; }
+</style>
+</head>
+<body>
+<div class="page">
+    <h2>Manage Existing Services</h2>
+    <div id="serviceEditor"></div>
+</div>
+
+<script type="module">
+  import { getFirestore, collection, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+
+  const db = getFirestore();
+
+  async function fetchServices() {
+    const querySnapshot = await getDocs(collection(db, "services"));
+    const container = document.getElementById('serviceEditor');
+    container.innerHTML = '';
+    
+    querySnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        <input type="text" id="name-${docSnap.id}" value="${data.name}">
+        <input type="text" id="price-${docSnap.id}" value="${data.price}">
+        <button class="btn-save" onclick="updateService('${docSnap.id}')">Save Changes</button>
+        <button class="btn-del" onclick="deleteService('${docSnap.id}')">Delete</button>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  window.updateService = async (id) => {
+    const name = document.getElementById(`name-${id}`).value;
+    const price = document.getElementById(`price-${id}`).value;
+    await updateDoc(doc(db, "services", id), { name, price });
+    alert("Updated!");
+  };
+
+  window.deleteService = async (id) => {
+    if(confirm("Delete this service?")) {
+        await deleteDoc(doc(db, "services", id));
+        fetchServices();
+    }
+  };
+
+  fetchServices();
+</script>
+</body>
+</html>
