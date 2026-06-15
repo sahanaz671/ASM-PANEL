@@ -212,6 +212,12 @@ input::placeholder { color:#3a2a08; }
 .btn-submit:hover { transform:translateY(-2px); box-shadow:0 0 40px rgba(212,175,55,0.6); }
 .btn-submit:active { transform:scale(0.98); }
 
+.btn-google {
+  background: #fff;
+  color: #333;
+  margin-bottom: 15px;
+}
+
 .divider {
   display:flex; align-items:center; gap:12px;
   margin:20px 0;
@@ -278,7 +284,12 @@ input::placeholder { color:#3a2a08; }
       <span class="wb-text">Your orders, balance and rank are waiting for you!</span>
     </div>
 
-    <div class="error-msg" id="errorMsg">❌ Invalid email or password. Please try again.</div>
+    <div class="error-msg" id="errorMsg">❌ Invalid credentials. Please try again.</div>
+
+    <!-- Google Login Button -->
+    <button class="btn-submit btn-google" id="googleBtn">
+      🌐 Login with Google
+    </button>
 
     <div class="input-group">
       <label class="input-label">Email Address</label>
@@ -322,7 +333,7 @@ input::placeholder { color:#3a2a08; }
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAO206UbraVsTWu5jV14XidgjMYXLRXQmw",
@@ -335,6 +346,8 @@ input::placeholder { color:#3a2a08; }
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const ADMIN_EMAIL = "yoursa.in.here@gmail.com";
 
   window.togglePass = function() {
     const pass = document.getElementById('password');
@@ -342,6 +355,14 @@ input::placeholder { color:#3a2a08; }
     pass.type = pass.type === 'password' ? 'text' : 'password';
     eye.textContent = pass.type === 'password' ? '👁️' : '🙈';
   };
+
+  function redirectUser(email) {
+    if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+      window.location.href = '/ADMIN/index.html';
+    } else {
+      window.location.href = 'index.html';
+    }
+  }
 
   window.handleLogin = async function() {
     const email = document.getElementById('email').value.trim();
@@ -356,11 +377,20 @@ input::placeholder { color:#3a2a08; }
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = 'index.html';
+      redirectUser(email);
     } catch (error) {
       errorMsg.style.display = 'block';
       btn.textContent = '🔓 Login to ASM Panel';
       btn.style.pointerEvents = 'auto';
+    }
+  };
+
+  document.getElementById('googleBtn').onclick = async function() {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      redirectUser(result.user.email);
+    } catch (error) {
+      alert("Google Login Error: " + error.message);
     }
   };
 </script>
