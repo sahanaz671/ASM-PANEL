@@ -1,14 +1,25 @@
-window.addService = async () => {
-    await addDoc(collection(db, "services"), {
-        name: document.getElementById('sName').value,
-        price: document.getElementById('sPrice').value,
-        category: document.getElementById('sCat').value,
-        desc: document.getElementById('sDesc').value,
-        min: document.getElementById('sMin').value,
-        max: document.getElementById('sMax').value,
-        emoji: document.getElementById('sEmoji').value,
-        icon: document.getElementById('sIcon').value,
-        popular: true 
-    });
-    alert("Service synced to Main Panel!");
-};
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+  const firebaseConfig = { /* YOUR CONFIG */ };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // We wrap this in a function so it doesn't run until the button is clicked
+  window.addService = async () => {
+    try {
+        const nameInput = document.getElementById('sName');
+        if (!nameInput) { alert("Error: Form inputs not found on this page"); return; }
+        
+        await addDoc(collection(db, "services"), {
+            name: nameInput.value,
+            price: document.getElementById('sPrice').value,
+            // ... other fields
+        });
+        alert("Service synced to Main Panel!");
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+  };
+</script>
