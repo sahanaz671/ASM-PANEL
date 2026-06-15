@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Users — Manager Panel</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  min-height:100vh;
+  font-family:'Segoe UI', sans-serif;
+  color:#fff;
+  background:#050400; 
+  padding-bottom:100px;
+}
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(30px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* Background Texture */
+#bgWrap { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events: none; }
+.base {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 50% 0%, #2a1a00 0%, transparent 50%),
+    linear-gradient(135deg, #050400 0%, #100a00 50%, #050400 100%);
+}
+.veins {
+  position:absolute; inset:0;
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0px, transparent 18px, rgba(212,175,55,0.02) 18px, rgba(212,175,55,0.02) 19px);
+  background-size:60px 60px;
+}
+
+.content { position:relative; z-index:10; }
+
+/* Manager Navbar */
+.navbar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(5,3,0,0.95);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(155, 89, 182, 0.4); /* Purple tint */
+  padding:14px 20px;
+  display:flex; align-items:center; gap: 15px;
+}
+.nav-title {
+  font-size:18px; font-weight:900;
+  background:linear-gradient(90deg, #b8860b, #d4af37, #ffd700);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  flex: 1;
+}
+.manager-badge {
+  background: #9b59b6; color: #fff; padding: 4px 10px;
+  border-radius: 8px; font-size: 10px; font-weight: 900; letter-spacing: 1px;
+}
+
+.page { padding:85px 20px 20px; max-width:600px; margin:0 auto; animation: slideUp 0.6s ease; }
+
+/* Search Bar */
+.search-box {
+  margin-bottom: 20px;
+  position: relative;
+}
+.search-box input {
+  width: 100%;
+  padding: 14px 14px 14px 40px;
+  background: rgba(20,13,0,0.8);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+.search-box input:focus {
+  border-color: #9b59b6;
+  box-shadow: 0 0 15px rgba(155, 89, 182, 0.2);
+}
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+}
+
+/* User Cards */
+.user-list { display:flex; flex-direction:column; gap:16px; }
+
+.user-card {
+  background: linear-gradient(135deg, rgba(20,13,0,0.9), rgba(30,20,0,0.9));
+  border:1px solid rgba(212,175,55,0.25);
+  border-radius:16px; padding:18px;
+}
+.uc-header {
+  display:flex; align-items:center; gap: 12px;
+  margin-bottom:15px; padding-bottom:12px; border-bottom:1px solid rgba(212,175,55,0.1);
+}
+.uc-avatar {
+  width: 45px; height: 45px; border-radius: 50%;
+  background: #1a1000; border: 1px solid #d4af37;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.uc-info { flex: 1; }
+.uc-name { font-size:15px; font-weight:800; color:#ffd700; margin-bottom: 4px; }
+.uc-email { font-size:11px; color:#a08050; }
+
+.uc-details {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  background:rgba(0,0,0,0.4); padding:12px;
+  border-radius:10px; margin-bottom:15px; border: 1px solid rgba(212,175,55,0.05);
+}
+.detail-item { display:flex; flex-direction:column; gap:4px; }
+.detail-label { font-size:10px; color:#8b6520; text-transform:uppercase; letter-spacing:0.5px; }
+.detail-val { font-size:13px; font-weight:700; color:#fff; }
+.val-gold { color: #d4af37; }
+
+/* Action Buttons (Restricted for Managers) */
+.card-actions {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.btn-action {
+  flex: 1; padding: 10px; border: none; border-radius: 8px;
+  font-size: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; color: #fff;
+  text-align: center;
+}
+.btn-view { background: rgba(155, 89, 182, 0.15); color: #9b59b6; border: 1px solid #9b59b6; }
+.btn-view:hover { background: #9b59b6; color: #fff; box-shadow: 0 0 10px rgba(155, 89, 182, 0.4); }
+.btn-msg { background: rgba(212,175,55,0.15); color: #d4af37; border: 1px solid #d4af37; }
+.btn-msg:hover { background: #d4af37; color: #000; }
+
+/* Manager Bottom Nav */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  background:rgba(5,3,0,0.98); backdrop-filter:blur(24px);
+  border-top:1px solid rgba(155, 89, 182, 0.4);
+  display:flex; justify-content:space-around; padding:10px 0 14px;
+}
+.nav-item {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  cursor:pointer; text-decoration:none; color:#8b6520; transition:all 0.3s; font-size:10px; font-weight: 600;
+}
+.nav-item.active, .nav-item:hover { color:#9b59b6; }
+.nav-item span:first-child { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div id="bgWrap">
+  <div class="base"></div>
+  <div class="veins"></div>
+</div>
+
+<div class="content">
+  <nav class="navbar">
+    <div class="nav-title">My Assigned Users</div>
+    <div class="manager-badge">MANAGER</div>
+  </nav>
+
+  <div class="page">
+    
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search my users...">
+    </div>
+
+    <div class="user-list">
+      
+      <div class="user-card">
+        <div class="uc-header">
+          <div class="uc-avatar">🔥</div>
+          <div class="uc-info">
+            <div class="uc-name">@creator_pro</div>
+            <div class="uc-email">pro@example.com</div>
+          </div>
+        </div>
+        <div class="uc-details">
+          <div class="detail-item">
+            <span class="detail-label">Total Spent</span>
+            <span class="detail-val">₹ 4,200.00</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Total Orders</span>
+            <span class="detail-val">15</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-action btn-view" onclick="alert('Viewing user statistics...')">View Stats</button>
+          <button class="btn-action btn-msg" onclick="alert('Opening message composer...')">Message</button>
+        </div>
+      </div>
+
+      <div class="user-card">
+        <div class="uc-header">
+          <div class="uc-avatar">🌟</div>
+          <div class="uc-info">
+            <div class="uc-name">@daily_vlogs</div>
+            <div class="uc-email">vlogs@example.com</div>
+          </div>
+        </div>
+        <div class="uc-details">
+          <div class="detail-item">
+            <span class="detail-label">Total Spent</span>
+            <span class="detail-val">₹ 1,150.00</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Total Orders</span>
+            <span class="detail-val">6</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-action btn-view" onclick="alert('Viewing user statistics...')">View Stats</button>
+          <button class="btn-action btn-msg" onclick="alert('Opening message composer...')">Message</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item"><span>📊</span><span>Dash</span></a>
+  <a href="users.html" class="nav-item active"><span>👥</span><span>Users</span></a>
+  <a href="deposit.html" class="nav-item"><span>💰</span><span>Deposit</span></a>
+</nav>
+
+</body>
+</html>
