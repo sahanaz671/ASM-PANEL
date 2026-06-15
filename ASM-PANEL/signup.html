@@ -378,7 +378,6 @@ input::placeholder { color: #3a2a08; }
       <div class="card-title">Create Account</div>
       <div class="card-sub">Join thousands of users growing their social media</div>
 
-      <!-- Profile photo -->
       <div class="photo-upload">
         <div class="photo-circle" onclick="document.getElementById('photoInput').click()">
           <span id="photoEmoji">📸</span>
@@ -388,7 +387,6 @@ input::placeholder { color: #3a2a08; }
         <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
       </div>
 
-      <!-- Full name -->
       <div class="input-group">
         <label class="input-label">Full Name</label>
         <div class="input-wrap">
@@ -397,7 +395,6 @@ input::placeholder { color: #3a2a08; }
         </div>
       </div>
 
-      <!-- Username -->
       <div class="input-group">
         <label class="input-label">Username</label>
         <div class="input-wrap">
@@ -406,7 +403,6 @@ input::placeholder { color: #3a2a08; }
         </div>
       </div>
 
-      <!-- Email -->
       <div class="input-group">
         <label class="input-label">Email Address</label>
         <div class="input-wrap">
@@ -415,7 +411,6 @@ input::placeholder { color: #3a2a08; }
         </div>
       </div>
 
-      <!-- Password -->
       <div class="input-group">
         <label class="input-label">Password</label>
         <div class="input-wrap">
@@ -424,7 +419,6 @@ input::placeholder { color: #3a2a08; }
         </div>
       </div>
 
-      <!-- Confirm Password -->
       <div class="input-group">
         <label class="input-label">Confirm Password</label>
         <div class="input-wrap">
@@ -433,7 +427,6 @@ input::placeholder { color: #3a2a08; }
         </div>
       </div>
 
-      <!-- Referral code -->
       <div class="input-group">
         <label class="input-label">Referral Code (Optional)</label>
         <div class="referral-row">
@@ -445,7 +438,6 @@ input::placeholder { color: #3a2a08; }
         </div>
       </div>
 
-      <!-- Rank preview -->
       <div class="rank-preview">
         <div class="rank-icon">🥉</div>
         <div class="rank-info">
@@ -454,7 +446,6 @@ input::placeholder { color: #3a2a08; }
         </div>
       </div>
 
-      <!-- Terms -->
       <div class="terms-row">
         <input type="checkbox" id="terms">
         <label class="terms-text" for="terms">
@@ -462,8 +453,7 @@ input::placeholder { color: #3a2a08; }
         </label>
       </div>
 
-      <!-- Submit -->
-      <button class="btn-submit" onclick="handleSignup()">🚀 Create My Account</button>
+      <button class="btn-submit" id="submitBtn" onclick="handleSignup()">🚀 Create My Account</button>
 
       <div class="divider">
         <div class="divider-line"></div>
@@ -476,58 +466,97 @@ input::placeholder { color: #3a2a08; }
       </div>
     </div>
 
-    <!-- Success screen -->
     <div class="success-msg" id="successMsg">
       <div class="success-icon">🎉</div>
       <div class="success-title">Welcome to ASM Panel!</div>
-      <div class="success-sub">Your account has been created successfully.<br>Redirecting to login...</div>
+      <div class="success-sub">Your account has been created successfully.<br>Redirecting to dashboard...</div>
     </div>
   </div>
 </div>
 
-<script>
-function previewPhoto(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const preview = document.getElementById('photoPreview');
-    const emoji = document.getElementById('photoEmoji');
-    preview.src = e.target.result;
-    preview.style.display = 'block';
-    emoji.style.display = 'none';
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAO206UbraVsTWu5jV14XidgjMYXLRXQmw",
+    authDomain: "famex-y.firebaseapp.com",
+    projectId: "famex-y",
+    storageBucket: "famex-y.firebasestorage.app",
+    messagingSenderId: "623896096501",
+    appId: "1:623896096501:web:f6c06ec82cad1a1e685fbc"
   };
-  reader.readAsDataURL(file);
-}
 
-function checkUsername(input) {
-  const val = input.value.replace(/[^a-zA-Z0-9_]/g, '');
-  input.value = val;
-}
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-function handleSignup() {
-  const fullName = document.getElementById('fullName').value.trim();
-  const username = document.getElementById('username').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const confirmPass = document.getElementById('confirmPass').value;
-  const terms = document.getElementById('terms').checked;
+  window.previewPhoto = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('photoPreview');
+      const emoji = document.getElementById('photoEmoji');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      emoji.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  };
 
-  if (!fullName) { alert('Please enter your full name'); return; }
-  if (!username) { alert('Please choose a username'); return; }
-  if (!email) { alert('Please enter your email'); return; }
-  if (password.length < 6) { alert('Password must be at least 6 characters'); return; }
-  if (password !== confirmPass) { alert('Passwords do not match'); return; }
-  if (!terms) { alert('Please accept the terms and conditions'); return; }
+  window.checkUsername = function(input) {
+    const val = input.value.replace(/[^a-zA-Z0-9_]/g, '');
+    input.value = val;
+  };
 
-  // Show success (Firebase will be connected later)
-  document.getElementById('formSection').style.display = 'none';
-  document.getElementById('successMsg').style.display = 'block';
+  window.handleSignup = async function() {
+    const fullName = document.getElementById('fullName').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPass = document.getElementById('confirmPass').value;
+    const terms = document.getElementById('terms').checked;
+    const btnSubmit = document.getElementById('submitBtn');
 
-  setTimeout(() => {
-    window.location.href = 'login.html';
-  }, 2500);
-}
+    if (!fullName) { alert('Please enter your full name'); return; }
+    if (!username) { alert('Please choose a username'); return; }
+    if (!email) { alert('Please enter your email'); return; }
+    if (password.length < 6) { alert('Password must be at least 6 characters'); return; }
+    if (password !== confirmPass) { alert('Passwords do not match'); return; }
+    if (!terms) { alert('Please accept the terms and conditions'); return; }
+
+    btnSubmit.textContent = '⏳ Creating account...';
+    btnSubmit.style.pointerEvents = 'none';
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        fullName: fullName,
+        username: username,
+        email: email,
+        balance: 0.00,
+        totalSpent: 0.00,
+        rank: "Bronze",
+        role: "user",
+        createdAt: new Date()
+      });
+
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2500);
+    } catch (error) {
+      alert("Error: " + error.message);
+      btnSubmit.textContent = '🚀 Create My Account';
+      btnSubmit.style.pointerEvents = 'auto';
+    }
+  };
 </script>
 </body>
 </html>
