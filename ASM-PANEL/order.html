@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Place Order — ASM Panel</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  min-height:100vh;
+  font-family:'Segoe UI', sans-serif;
+  color:#fff;
+  background:#0a0800;
+  padding-bottom:100px;
+}
+@keyframes goldShimmer {
+  0% { background-position:-200% center; }
+  100% { background-position:200% center; }
+}
+@keyframes float {
+  0%,100% { transform:translateY(0); }
+  50% { transform:translateY(-8px); }
+}
+@keyframes pulse {
+  0%,100% { box-shadow:0 0 20px #d4af3744; }
+  50% { box-shadow:0 0 45px #d4af37aa; }
+}
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes shimmerLine {
+  0% { left:-100%; }
+  100% { left:200%; }
+}
+@keyframes textureMove {
+  0% { background-position:0% 0%; }
+  50% { background-position:100% 100%; }
+  100% { background-position:0% 0%; }
+}
+@keyframes orbFloat {
+  0%,100% { transform:translateY(0) scale(1); }
+  50% { transform:translateY(-20px) scale(1.05); }
+}
+@keyframes countUp {
+  from { opacity:0; transform:scale(0.8); }
+  to { opacity:1; transform:scale(1); }
+}
+
+#bgWrap { position:fixed; inset:0; z-index:0; overflow:hidden; }
+.base {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 20% 20%, #3d2a00 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, #2a1a00 0%, transparent 50%),
+    linear-gradient(135deg, #0d0800 0%, #1a1000 25%, #0f0900 50%, #1f1500 75%, #0a0600 100%);
+  animation:textureMove 20s ease-in-out infinite;
+  background-size:400% 400%;
+}
+.veins {
+  position:absolute; inset:0;
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0px, transparent 18px, rgba(212,175,55,0.03) 18px, rgba(212,175,55,0.03) 19px),
+    repeating-linear-gradient(-45deg, transparent 0px, transparent 28px, rgba(180,140,40,0.025) 28px, rgba(180,140,40,0.025) 29px);
+  background-size:60px 60px, 80px 80px;
+}
+.orb { position:absolute; border-radius:50%; filter:blur(70px); animation:orbFloat ease-in-out infinite; }
+.orb1 { width:300px; height:300px; background:radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%); top:-80px; left:-60px; animation-duration:12s; }
+.orb2 { width:250px; height:250px; background:radial-gradient(circle, rgba(255,200,50,0.07) 0%, transparent 70%); bottom:20%; right:-40px; animation-duration:15s; animation-delay:4s; }
+
+.content { position:relative; z-index:10; }
+
+.navbar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(5,3,0,0.9);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(212,175,55,0.2);
+  padding:14px 20px;
+  display:flex; align-items:center; gap:12px;
+}
+.back-btn {
+  width:36px; height:36px;
+  background:rgba(212,175,55,0.1);
+  border:1px solid rgba(212,175,55,0.3);
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; text-decoration:none; font-size:16px;
+  transition:all 0.3s;
+}
+.nav-title {
+  font-size:18px; font-weight:800;
+  background:linear-gradient(90deg, #b8860b, #d4af37, #ffd700, #d4af37, #b8860b);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:goldShimmer 2.5s linear infinite;
+}
+.balance-chip {
+  margin-left:auto;
+  background:rgba(212,175,55,0.1);
+  border:1px solid rgba(212,175,55,0.3);
+  border-radius:20px;
+  padding:6px 14px;
+  font-size:12px; color:#d4af37; font-weight:700;
+}
+
+.page { padding:75px 20px 20px; }
+
+/* Selected service card */
+.selected-service {
+  background:linear-gradient(135deg, rgba(15,10,0,0.9), rgba(28,18,0,0.9));
+  border:1px solid rgba(212,175,55,0.35);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:20px;
+  position:relative; overflow:hidden;
+  animation:slideUp 0.5s ease, pulse 3s infinite;
+}
+.selected-service::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, transparent, #ffd700, transparent);
+  animation:goldShimmer 2s linear infinite;
+  background-size:200% auto;
+}
+.ss-top { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.ss-icon { font-size:32px; animation:float 3s ease-in-out infinite; }
+.ss-info { flex:1; }
+.ss-name { font-size:15px; font-weight:800; color:#e8c87a; margin-bottom:3px; }
+.ss-price {
+  font-size:13px;
+  background:linear-gradient(90deg, #d4af37, #ffd700);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-weight:700;
+}
+.change-btn {
+  padding:7px 14px;
+  background:rgba(212,175,55,0.1);
+  border:1px solid rgba(212,175,55,0.3);
+  border-radius:20px;
+  color:#d4af37;
+  font-size:12px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:all 0.3s;
+}
+.change-btn:hover { background:rgba(212,175,55,0.2); }
+
+/* Service note */
+.service-note {
+  background:rgba(212,175,55,0.06);
+  border:1px solid rgba(212,175,55,0.15);
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:12px; color:#8b6520;
+  display:flex; gap:8px; align-items:flex-start;
+  margin-bottom:20px;
+}
+
+/* Form card */
+.form-card {
+  background:linear-gradient(135deg, rgba(15,10,0,0.9), rgba(28,18,0,0.9));
+  border:1px solid rgba(212,175,55,0.25);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:16px;
+  position:relative; overflow:hidden;
+  animation:slideUp 0.6s ease;
+}
+.form-card::after {
+  content:'';
+  position:absolute; top:0; left:-100%; width:60%; height:100%;
+  background:linear-gradient(90deg, transparent, rgba(212,175,55,0.04), transparent);
+  animation:shimmerLine 4s linear infinite;
+}
+.form-title {
+  font-size:14px; font-weight:700; color:#d4af37;
+  margin-bottom:15px;
+  display:flex; align-items:center; gap:8px;
+}
+
+.input-group { margin-bottom:15px; }
+.input-label { font-size:12px; color:#8b6520; margin-bottom:6px; display:block; }
+.input-wrap { position:relative; }
+.input-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:15px; }
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width:100%;
+  padding:12px 14px 12px 42px;
+  background:rgba(20,13,0,0.8);
+  border:1px solid rgba(212,175,55,0.2);
+  border-radius:12px;
+  color:#fff;
+  font-size:14px;
+  outline:none;
+  transition:all 0.3s;
+  font-family:'Segoe UI', sans-serif;
+}
+select { padding-left:14px; cursor:pointer; }
+textarea { padding:12px 14px; resize:none; min-height:80px; }
+input:focus, textarea:focus, select:focus {
+  border-color:rgba(212,175,55,0.5);
+  box-shadow:0 0 12px rgba(212,175,55,0.12);
+  background:rgba(30,20,0,0.9);
+}
+input::placeholder, textarea::placeholder { color:#3a2a08; }
+select option { background:#1a1000; color:#fff; }
+
+/* Quantity controls */
+.qty-wrap {
+  display:flex; align-items:center; gap:10px;
+}
+.qty-btn {
+  width:40px; height:40px;
+  background:rgba(212,175,55,0.1);
+  border:1px solid rgba(212,175,55,0.3);
+  border-radius:10px;
+  color:#d4af37;
+  font-size:20px; font-weight:700;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+  flex-shrink:0;
+}
+.qty-btn:hover { background:rgba(212,175,55,0.2); }
+.qty-btn:active { transform:scale(0.9); }
+.qty-input {
+  flex:1;
+  text-align:center;
+  padding:12px 8px !important;
+  padding-left:8px !important;
+  font-size:18px !important;
+  font-weight:700;
+}
+
+/* Price calculator */
+.price-calc {
+  background:linear-gradient(135deg, rgba(10,7,0,0.9), rgba(20,13,0,0.9));
+  border:1px solid rgba(212,175,55,0.3);
+  border-radius:15px;
+  padding:16px;
+  margin-bottom:20px;
+  animation:slideUp 0.7s ease;
+}
+.calc-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid rgba(212,175,55,0.1);
+  font-size:13px;
+}
+.calc-row:last-child { border-bottom:none; }
+.calc-label { color:#5a3e15; }
+.calc-value { color:#d4af37; font-weight:600; }
+.calc-total {
+  font-size:16px !important;
+  font-weight:800 !important;
+}
+.calc-total .calc-value {
+  background:linear-gradient(90deg, #d4af37, #ffd700);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-size:18px;
+  animation:countUp 0.3s ease;
+}
+
+/* Balance warning */
+.balance-warn {
+  background:rgba(255,100,0,0.1);
+  border:1px solid rgba(255,100,0,0.3);
+  border-radius:12px;
+  padding:12px 15px;
+  font-size:12px; color:#ff8c42;
+  display:flex; gap:10px; align-items:center;
+  margin-bottom:16px;
+  display:none;
+}
+
+/* Submit button */
+.btn-submit {
+  width:100%;
+  padding:16px;
+  background:linear-gradient(135deg, #8b6914, #d4af37, #ffd700, #d4af37);
+  background-size:200% auto;
+  animation:goldShimmer 3s linear infinite;
+  color:#000;
+  border:none;
+  border-radius:14px;
+  font-size:16px; font-weight:800;
+  cursor:pointer;
+  transition:all 0.3s;
+  box-shadow:0 0 25px rgba(212,175,55,0.4);
+  letter-spacing:0.5px;
+}
+.btn-submit:hover { transform:translateY(-2px); box-shadow:0 0 40px rgba(212,175,55,0.6); }
+.btn-submit:active { transform:scale(0.98); }
+.btn-submit:disabled { opacity:0.5; pointer-events:none; }
+
+/* Success overlay */
+.success-overlay {
+  display:none;
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(10px);
+  align-items:center; justify-content:center;
+  flex-direction:column; text-align:center;
+  padding:30px;
+}
+.success-overlay.show { display:flex; }
+.success-icon-big { font-size:80px; animation:float 2s ease-in-out infinite; margin-bottom:20px; }
+.success-title { font-size:26px; font-weight:900; color:#d4af37; margin-bottom:10px; }
+.success-sub { color:#8b6520; font-size:14px; line-height:1.6; margin-bottom:30px; }
+.order-id-box {
+  background:rgba(212,175,55,0.1);
+  border:1px solid rgba(212,175,55,0.3);
+  border-radius:12px;
+  padding:12px 24px;
+  font-size:13px; color:#d4af37;
+  margin-bottom:25px;
+}
+.btn-track {
+  padding:14px 35px;
+  background:linear-gradient(135deg, #8b6914, #d4af37, #ffd700);
+  color:#000;
+  border:none; border-radius:35px;
+  font-size:15px; font-weight:800;
+  cursor:pointer; text-decoration:none;
+  display:inline-block;
+}
+
+/* Bottom nav */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  background:rgba(5,3,0,0.95);
+  backdrop-filter:blur(24px);
+  border-top:1px solid rgba(212,175,55,0.2);
+  display:flex; justify-content:space-around;
+  padding:10px 0 14px;
+}
+.nav-item {
+  display:flex; flex-direction:column; align-items:center;
+  gap:3px; cursor:pointer; text-decoration:none;
+  color:#444; transition:all 0.3s; font-size:10px;
+}
+.nav-item.active, .nav-item:hover { color:#d4af37; }
+.nav-item span:first-child { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div id="bgWrap">
+  <div class="base"></div>
+  <div class="veins"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+</div>
+
+<div class="content">
+  <nav class="navbar">
+    <a href="services.html" class="back-btn">←</a>
+    <div class="nav-title">Place Order</div>
+    <div class="balance-chip">💰 ₹0.00</div>
+  </nav>
+
+  <div class="page">
+
+    <!-- Selected service -->
+    <div class="selected-service">
+      <div class="ss-top">
+        <span class="ss-icon" id="serviceIcon">📸</span>
+        <div class="ss-info">
+          <div class="ss-name" id="serviceName">Instagram Followers</div>
+          <div class="ss-price" id="servicePrice">₹1.00 per 1000</div>
+        </div>
+        <a href="services.html" class="change-btn">Change</a>
+      </div>
+    </div>
+
+    <!-- Service note -->
+    <div class="service-note" id="serviceNoteBox">
+      <span>⚠️</span>
+      <span id="serviceNoteText">Profile must be PUBLIC before ordering.</span>
+    </div>
+
+    <!-- Order form -->
+    <div class="form-card">
+      <div class="form-title">📋 Order Details</div>
+
+      <!-- Link input -->
+      <div class="input-group">
+        <label class="input-label">Profile / Post Link *</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔗</span>
+          <input type="text" id="linkInput" placeholder="Paste your link here...">
+        </div>
+      </div>
+
+      <!-- Quantity -->
+      <div class="input-group">
+        <label class="input-label">Quantity *</label>
+        <div class="qty-wrap">
+          <button class="qty-btn" onclick="changeQty(-100)">−</button>
+          <input type="number" class="qty-input" id="qtyInput" value="1000" min="100" oninput="calcPrice()">
+          <button class="qty-btn" onclick="changeQty(100)">+</button>
+        </div>
+      </div>
+
+      <!-- Optional: Custom comment (shown for comment services) -->
+      <div class="input-group" id="commentGroup" style="display:none;">
+        <label class="input-label">Custom Comment Text *</label>
+        <div class="input-wrap">
+          <textarea id="commentInput" placeholder="Enter your custom comment..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price calculator -->
+    <div class="price-calc">
+      <div class="calc-row">
+        <span class="calc-label">Service</span>
+        <span class="calc-value" id="calcService">Instagram Followers</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">Quantity</span>
+        <span class="calc-value" id="calcQty">1,000</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">Rate per 1000</span>
+        <span class="calc-value" id="calcRate">₹1.00</span>
+      </div>
+      <div class="calc-row calc-total">
+        <span class="calc-label">Total Cost</span>
+        <span class="calc-value" id="calcTotal">₹1.00</span>
+      </div>
+    </div>
+
+    <!-- Balance warning -->
+    <div class="balance-warn" id="balanceWarn">
+      ⚠️ Insufficient balance! <a href="funds.html" style="color:#ffd700; margin-left:5px;">Add Funds →</a>
+    </div>
+
+    <!-- Submit -->
+    <button class="btn-submit" id="submitBtn" onclick="placeOrder()">
+      🚀 Place Order Now
+    </button>
+  </div>
+</div>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon-big">✅</div>
+  <div class="success-title">Order Placed!</div>
+  <div class="success-sub">Your order has been received.<br>We'll start processing it shortly.</div>
+  <div class="order-id-box" id="orderIdBox">Order ID: #ASM00001</div>
+  <a href="order-history.html" class="btn-track">📦 Track My Order</a>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item"><span>🏠</span><span>Home</span></a>
+  <a href="services.html" class="nav-item"><span>🛍️</span><span>Services</span></a>
+  <a href="order.html" class="nav-item active"><span>📦</span><span>Order</span></a>
+  <a href="funds.html" class="nav-item"><span>💰</span><span>Funds</span></a>
+  <a href="profile.html" class="nav-item"><span>👤</span><span>Profile</span></a>
+</nav>
+
+<script>
+// Load service from localStorage
+const serviceName = localStorage.getItem('orderService') || 'Instagram Followers';
+const servicePrice = parseFloat(localStorage.getItem('orderPrice') || '1.00');
+const serviceType = localStorage.getItem('orderType') || 'instagram-followers';
+
+// Service icons map
+const icons = {
+  'instagram-followers':'👥','instagram-likes':'❤️','instagram-views':'👁️',
+  'instagram-comments':'💬','youtube-views':'👁️','youtube-subs':'🔔',
+  'youtube-likes':'👍','fb-likes':'👍','fb-followers':'👥',
+  'tt-followers':'👥','tt-views':'👁️','tw-followers':'👥',
+  'tw-likes':'❤️','tg-members':'👥','tg-views':'👁️'
+};
+
+// Service notes
+const notes = {
+  'instagram-followers':'Profile must be PUBLIC. Turn off "Flag for review" in settings.',
+  'instagram-likes':'Profile and post must be PUBLIC to receive likes.',
+  'instagram-views':'Video or Reel must be PUBLIC to receive views.',
+  'instagram-comments':'Post must be PUBLIC. Enter custom comment text below.',
+  'tt-followers':'Account must be PUBLIC to receive followers.',
+  'default':'Please make sure your profile or post is public before ordering.'
+};
+
+document.getElementById('serviceIcon').textContent = icons[serviceType] || '📦';
+document.getElementById('serviceName').textContent = serviceName;
+document.getElementById('servicePrice').textContent = '₹' + servicePrice.toFixed(2) + ' per 1000';
+document.getElementById('calcService').textContent = serviceName;
+document.getElementById('calcRate').textContent = '₹' + servicePrice.toFixed(2);
+document.getElementById('serviceNoteText').textContent = notes[serviceType] || notes['default'];
+
+if (serviceType === 'instagram-comments') {
+  document.getElementById('commentGroup').style.display = 'block';
+}
+
+function calcPrice() {
+  const qty = parseInt(document.getElementById('qtyInput').value) || 0;
+  const total = (qty / 1000) * servicePrice;
+  document.getElementById('calcQty').textContent = qty.toLocaleString();
+  document.getElementById('calcTotal').textContent = '₹' + total.toFixed(2);
+  return total;
+}
+
+function changeQty(amount) {
+  const input = document.getElementById('qtyInput');
+  let val = parseInt(input.value) || 0;
+  val = Math.max(100, val + amount);
+  input.value = val;
+  calcPrice();
+}
+
+calcPrice();
+
+function placeOrder() {
+  const link = document.getElementById('linkInput').value.trim();
+  const qty = parseInt(document.getElementById('qtyInput').value);
+
+  if (!link) { alert('Please enter your profile or post link'); return; }
+  if (!link.startsWith('http')) { alert('Please enter a valid URL starting with http'); return; }
+  if (qty < 100) { alert('Minimum quantity is 100'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '⏳ Processing...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    const orderId = '#ASM' + Math.floor(10000 + Math.random() * 90000);
+    document.getElementById('orderIdBox').textContent = 'Order ID: ' + orderId;
+    document.getElementById('successOverlay').classList.add('show');
+  }, 1500);
+}
+</script>
+</body>
+</html>
