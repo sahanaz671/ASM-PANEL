@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wholesale Deposit — Manager Panel</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  min-height:100vh;
+  font-family:'Segoe UI', sans-serif;
+  color:#fff;
+  background:#050400; 
+  padding-bottom:100px;
+}
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(30px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* Background Texture */
+#bgWrap { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events: none; }
+.base {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 50% 0%, #2a1a00 0%, transparent 50%),
+    linear-gradient(135deg, #050400 0%, #100a00 50%, #050400 100%);
+}
+.veins {
+  position:absolute; inset:0;
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0px, transparent 18px, rgba(212,175,55,0.02) 18px, rgba(212,175,55,0.02) 19px);
+  background-size:60px 60px;
+}
+
+.content { position:relative; z-index:10; }
+
+/* Manager Navbar */
+.navbar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(5,3,0,0.95);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(155, 89, 182, 0.4); 
+  padding:14px 20px;
+  display:flex; align-items:center; gap: 15px;
+}
+.nav-title {
+  font-size:18px; font-weight:900;
+  background:linear-gradient(90deg, #b8860b, #d4af37, #ffd700);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  flex: 1;
+}
+.manager-badge {
+  background: #9b59b6; color: #fff; padding: 4px 10px;
+  border-radius: 8px; font-size: 10px; font-weight: 900; letter-spacing: 1px;
+}
+
+.page { padding:85px 20px 20px; max-width:500px; margin:0 auto; animation: slideUp 0.6s ease; }
+
+/* Cards */
+.card {
+  background: linear-gradient(135deg, rgba(20,13,0,0.9), rgba(30,20,0,0.9));
+  border: 1px solid rgba(212,175,55,0.25);
+  border-radius: 16px; padding: 25px; margin-bottom: 20px;
+}
+.card-title { 
+  font-size: 16px; font-weight: 700; color: #9b59b6; 
+  margin-bottom: 15px; border-bottom: 1px solid rgba(155, 89, 182, 0.15); padding-bottom: 10px; text-align: center;
+}
+.instruction-text { font-size: 13px; color: #a08050; margin-bottom: 15px; line-height: 1.5; text-align: center; }
+
+.highlight-box {
+  background: rgba(0,0,0,0.4); border: 1px dashed rgba(212,175,55,0.3);
+  padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px;
+}
+.upi-id { font-size: 16px; font-weight: 800; color: #ffd700; letter-spacing: 1px; margin-bottom: 5px; }
+.min-deposit { font-size: 12px; color: #8b6520; }
+
+/* Form inputs */
+.input-group { margin-bottom: 16px; }
+.input-label { font-size: 12px; color: #8b6520; margin-bottom: 6px; display: block; font-weight: 600; letter-spacing: 0.5px; }
+input[type="text"], input[type="number"] {
+  width: 100%; padding: 14px;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  border-radius: 12px; color: #fff; font-size: 14px;
+  outline: none; transition: 0.3s;
+}
+input:focus { border-color: #9b59b6; box-shadow: 0 0 15px rgba(155, 89, 182, 0.2); background: rgba(20,10,25,0.8); }
+
+.btn-submit {
+  width: 100%; padding: 15px; margin-top: 10px;
+  background: linear-gradient(135deg, #732d91, #9b59b6);
+  color: #fff; border: none; border-radius: 12px;
+  font-size: 15px; font-weight: 800; cursor: pointer; transition: 0.3s;
+}
+.btn-submit:hover { box-shadow: 0 0 20px rgba(155, 89, 182, 0.4); transform: translateY(-2px); }
+
+/* Manager Bottom Nav */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  background:rgba(5,3,0,0.98); backdrop-filter:blur(24px);
+  border-top:1px solid rgba(155, 89, 182, 0.4);
+  display:flex; justify-content:space-around; padding:10px 0 14px;
+}
+.nav-item {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  cursor:pointer; text-decoration:none; color:#8b6520; transition:all 0.3s; font-size:10px; font-weight: 600;
+}
+.nav-item.active, .nav-item:hover { color:#9b59b6; }
+.nav-item span:first-child { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div id="bgWrap">
+  <div class="base"></div>
+  <div class="veins"></div>
+</div>
+
+<div class="content">
+  <nav class="navbar">
+    <div class="nav-title">Wholesale Deposit</div>
+    <div class="manager-badge">MANAGER</div>
+  </nav>
+
+  <div class="page">
+    
+    <div class="card">
+      <div class="card-title">Bank / UPI Details</div>
+      <div class="instruction-text">To add wholesale funds to your Manager account, please send the payment to the UPI ID below and submit the transaction details.</div>
+      
+      <div class="highlight-box">
+        <div class="upi-id">admin-wholesale@ybl</div>
+        <div class="min-deposit">Minimum Deposit: ₹ 2,000.00</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Submit Transfer Details</div>
+      
+      <div class="input-group">
+        <label class="input-label">Amount Transferred (₹)</label>
+        <input type="number" id="depAmount" placeholder="e.g. 5000">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Transaction / UTR Number</label>
+        <input type="text" id="depUtr" placeholder="Enter 12-digit UTR">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Sender Name / Bank Name</label>
+        <input type="text" id="depName" placeholder="Name on the sending account">
+      </div>
+
+      <button class="btn-submit" onclick="submitDeposit()">Submit Request</button>
+    </div>
+
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item"><span>📊</span><span>Dash</span></a>
+  <a href="users.html" class="nav-item"><span>👥</span><span>Users</span></a>
+  <a href="deposit.html" class="nav-item active"><span>💰</span><span>Deposit</span></a>
+</nav>
+
+<script>
+  function submitDeposit() {
+    const amount = document.getElementById('depAmount').value;
+    const utr = document.getElementById('depUtr').value;
+    const name = document.getElementById('depName').value;
+
+    if(!amount || amount < 2000) { alert('Minimum wholesale deposit is ₹2,000.'); return; }
+    if(!utr || !name) { alert('Please fill in all fields completely.'); return; }
+
+    const btn = document.querySelector('.btn-submit');
+    btn.textContent = '⏳ Processing...';
+    btn.style.pointerEvents = 'none';
+
+    setTimeout(() => {
+      alert('Deposit request submitted! The Admin will review and add funds to your Manager account shortly.');
+      window.location.reload();
+    }, 1500);
+  }
+</script>
+
+</body>
+</html>
