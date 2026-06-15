@@ -248,12 +248,6 @@ input::placeholder { color:#3a2a08; }
   display:none;
   text-align:center;
 }
-
-/* Loading state */
-.btn-loading {
-  opacity:0.8;
-  pointer-events:none;
-}
 </style>
 </head>
 <body>
@@ -326,48 +320,49 @@ input::placeholder { color:#3a2a08; }
   </div>
 </div>
 
-<script>
-function togglePass() {
-  const pass = document.getElementById('password');
-  const eye = document.getElementById('eyeIcon');
-  if (pass.type === 'password') {
-    pass.type = 'text';
-    eye.textContent = '🙈';
-  } else {
-    pass.type = 'password';
-    eye.textContent = '👁️';
-  }
-}
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-function handleLogin() {
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const btn = document.getElementById('loginBtn');
-  const errorMsg = document.getElementById('errorMsg');
+  const firebaseConfig = {
+    apiKey: "AIzaSyAO206UbraVsTWu5jV14XidgjMYXLRXQmw",
+    authDomain: "famex-y.firebaseapp.com",
+    projectId: "famex-y",
+    storageBucket: "famex-y.firebasestorage.app",
+    messagingSenderId: "623896096501",
+    appId: "1:623896096501:web:f6c06ec82cad1a1e685fbc"
+  };
 
-  errorMsg.style.display = 'none';
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-  if (!email) { alert('Please enter your email'); return; }
-  if (!password) { alert('Please enter your password'); return; }
+  window.togglePass = function() {
+    const pass = document.getElementById('password');
+    const eye = document.getElementById('eyeIcon');
+    pass.type = pass.type === 'password' ? 'text' : 'password';
+    eye.textContent = pass.type === 'password' ? '👁️' : '🙈';
+  };
 
-  // Loading state
-  btn.textContent = '⏳ Logging in...';
-  btn.classList.add('btn-loading');
+  window.handleLogin = async function() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('loginBtn');
+    const errorMsg = document.getElementById('errorMsg');
 
-  // Simulate login (Firebase will be connected later)
-  setTimeout(() => {
-    btn.textContent = '🔓 Login to ASM Panel';
-    btn.classList.remove('btn-loading');
+    if (!email || !password) { alert('Please fill in all fields'); return; }
 
-    // For now redirect to home (later Firebase auth)
-    window.location.href = 'index.html';
-  }, 1500);
-}
+    btn.textContent = '⏳ Logging in...';
+    btn.style.pointerEvents = 'none';
 
-// Allow enter key
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') handleLogin();
-});
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href = 'index.html';
+    } catch (error) {
+      errorMsg.style.display = 'block';
+      btn.textContent = '🔓 Login to ASM Panel';
+      btn.style.pointerEvents = 'auto';
+    }
+  };
 </script>
 </body>
 </html>
