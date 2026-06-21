@@ -48,17 +48,13 @@ body {
   0%,100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-20px) scale(1.05); }
 }
-
-/* Background */
-#bgWrap {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
+
+#bgWrap { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
 .base {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background:
     radial-gradient(ellipse at 20% 20%, #3d2a00 0%, transparent 50%),
     radial-gradient(ellipse at 80% 80%, #2a1a00 0%, transparent 50%),
@@ -67,39 +63,21 @@ body {
   background-size: 400% 400%;
 }
 .veins {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background-image:
     repeating-linear-gradient(45deg, transparent 0px, transparent 18px, rgba(212,175,55,0.03) 18px, rgba(212,175,55,0.03) 19px),
     repeating-linear-gradient(-45deg, transparent 0px, transparent 28px, rgba(180,140,40,0.025) 28px, rgba(180,140,40,0.025) 29px);
   background-size: 60px 60px, 80px 80px;
 }
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(70px);
-  animation: orbFloat ease-in-out infinite;
-}
+.orb { position: absolute; border-radius: 50%; filter: blur(70px); animation: orbFloat ease-in-out infinite; }
 .orb1 { width:300px; height:300px; background:radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%); top:-80px; left:-60px; animation-duration:12s; }
 .orb2 { width:250px; height:250px; background:radial-gradient(circle, rgba(255,200,50,0.07) 0%, transparent 70%); bottom:10%; right:-40px; animation-duration:15s; animation-delay:4s; }
 
-/* Page content */
-.page {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  max-width: 420px;
-  animation: slideUp 0.8s ease;
-}
+.page { position: relative; z-index: 10; width: 100%; max-width: 420px; animation: slideUp 0.8s ease; }
 
-/* Logo header */
-.logo-wrap {
-  text-align: center;
-  margin-bottom: 30px;
-}
+.logo-wrap { text-align: center; margin-bottom: 25px; }
 .logo {
-  font-size: 26px;
-  font-weight: 900;
+  font-size: 26px; font-weight: 900;
   background: linear-gradient(90deg, #b8860b, #d4af37, #ffd700, #ffe566, #d4af37, #b8860b);
   background-size: 200% auto;
   -webkit-background-clip: text;
@@ -107,255 +85,149 @@ body {
   animation: goldShimmer 2.5s linear infinite;
   letter-spacing: 3px;
 }
-.logo-sub {
-  color: #5a3e15;
-  font-size: 12px;
-  margin-top: 4px;
-  letter-spacing: 1px;
-}
+.logo-sub { color: #5a3e15; font-size: 12px; margin-top: 4px; }
 
-/* Card */
 .card {
   background: linear-gradient(135deg, rgba(15,10,0,0.92), rgba(28,18,0,0.92));
   border: 1px solid rgba(212,175,55,0.3);
   border-radius: 24px;
   padding: 30px 24px;
   backdrop-filter: blur(20px);
-  position: relative;
-  overflow: hidden;
+  position: relative; overflow: hidden;
   animation: pulse 3s infinite;
 }
 .card::before {
   content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, #ffd700, #d4af37, #ffd700, transparent);
   animation: goldShimmer 2s linear infinite;
   background-size: 200% auto;
 }
-.card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 60%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.04), transparent);
-  animation: shimmerLine 4s linear infinite;
-}
 
 .card-title {
-  font-size: 22px;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 6px;
+  font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 6px;
   background: linear-gradient(90deg, #d4af37, #ffd700, #ffe566);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.card-sub {
-  text-align: center;
-  color: #5a3e15;
-  font-size: 12px;
-  margin-bottom: 25px;
-}
+.card-sub { text-align: center; color: #5a3e15; font-size: 12px; margin-bottom: 22px; }
 
-/* Profile photo upload */
-.photo-upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 22px;
-}
-.photo-circle {
-  width: 85px;
-  height: 85px;
-  border-radius: 50%;
-  border: 2px solid rgba(212,175,55,0.5);
-  background: linear-gradient(135deg, rgba(30,20,0,0.9), rgba(50,35,0,0.9));
+/* Google button */
+.google-btn {
+  width: 100%;
+  padding: 13px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  cursor: pointer;
+  gap: 10px;
+  margin-bottom: 18px;
   transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
+}
+.google-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(212,175,55,0.5); }
+.google-icon { width: 18px; height: 18px; }
+
+.divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; }
+.divider-line { flex: 1; height: 1px; background: rgba(212,175,55,0.15); }
+.divider-text { color: #3a2a08; font-size: 11px; }
+
+.photo-upload { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+.photo-circle {
+  width: 80px; height: 80px; border-radius: 50%;
+  border: 2px solid rgba(212,175,55,0.5);
+  background: linear-gradient(135deg, rgba(30,20,0,0.9), rgba(50,35,0,0.9));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; cursor: pointer; transition: all 0.3s;
+  position: relative; overflow: hidden;
   animation: float 4s ease-in-out infinite;
 }
-.photo-circle:hover {
-  border-color: #d4af37;
-  box-shadow: 0 0 25px rgba(212,175,55,0.4);
-}
-.photo-circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  display: none;
-}
-.photo-label {
-  color: #6b5020;
-  font-size: 11px;
-  margin-top: 8px;
-}
+.photo-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none; }
+.photo-label { color: #6b5020; font-size: 11px; margin-top: 8px; }
 #photoInput { display: none; }
 
-/* Input groups */
-.input-group {
-  margin-bottom: 16px;
-}
-.input-label {
-  font-size: 12px;
-  color: #8b6520;
-  margin-bottom: 6px;
-  display: block;
-  letter-spacing: 0.5px;
-}
-.input-wrap {
-  position: relative;
-}
-.input-icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-}
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+.input-group { margin-bottom: 15px; }
+.input-label { font-size: 12px; color: #8b6520; margin-bottom: 6px; display: block; }
+.input-wrap { position: relative; }
+.input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; }
+
+input[type="text"], input[type="email"], input[type="password"] {
   width: 100%;
   padding: 13px 14px 13px 42px;
   background: rgba(20,13,0,0.8);
   border: 1px solid rgba(212,175,55,0.2);
   border-radius: 12px;
-  color: #fff;
-  font-size: 14px;
-  outline: none;
+  color: #fff; font-size: 14px; outline: none;
   transition: all 0.3s;
   font-family: 'Segoe UI', sans-serif;
 }
-input:focus {
-  border-color: rgba(212,175,55,0.6);
-  box-shadow: 0 0 15px rgba(212,175,55,0.15);
-  background: rgba(30,20,0,0.9);
-}
+input:focus { border-color: rgba(212,175,55,0.6); box-shadow: 0 0 15px rgba(212,175,55,0.15); background: rgba(30,20,0,0.9); }
 input::placeholder { color: #3a2a08; }
 
-/* Referral field */
-.referral-row {
-  display: flex;
-  gap: 8px;
-}
+.referral-row { display: flex; gap: 8px; }
 .referral-row input { flex: 1; }
 .ref-badge {
-  padding: 0 14px;
-  background: rgba(212,175,55,0.1);
-  border: 1px solid rgba(212,175,55,0.3);
-  border-radius: 12px;
-  color: #d4af37;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
+  padding: 0 14px; background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3); border-radius: 12px;
+  color: #d4af37; font-size: 11px; display: flex; align-items: center; white-space: nowrap;
 }
 
-/* Terms */
-.terms-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.terms-row input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  padding: 0;
-  accent-color: #d4af37;
-  margin-top: 2px;
-  flex-shrink: 0;
-}
-.terms-text {
-  font-size: 11px;
-  color: #5a3e15;
-  line-height: 1.5;
-}
+.terms-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
+.terms-row input[type="checkbox"] { width: 16px; height: 16px; padding: 0; accent-color: #d4af37; margin-top: 2px; flex-shrink: 0; }
+.terms-text { font-size: 11px; color: #5a3e15; line-height: 1.5; }
 .terms-text a { color: #d4af37; text-decoration: none; }
 
-/* Submit button */
 .btn-submit {
-  width: 100%;
-  padding: 15px;
+  width: 100%; padding: 15px;
   background: linear-gradient(135deg, #8b6914, #d4af37, #ffd700, #d4af37);
   background-size: 200% auto;
   animation: goldShimmer 3s linear infinite;
-  color: #000;
-  border: none;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 800;
-  cursor: pointer;
+  color: #000; border: none; border-radius: 14px;
+  font-size: 16px; font-weight: 800; cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 0 25px rgba(212,175,55,0.4), 0 5px 20px rgba(0,0,0,0.5);
   letter-spacing: 1px;
 }
-.btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 40px rgba(212,175,55,0.6);
-}
-.btn-submit:active { transform: scale(0.98); }
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(212,175,55,0.6); }
+.btn-submit:disabled { opacity: 0.6; pointer-events: none; }
 
-/* Divider */
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 20px 0;
-}
-.divider-line {
-  flex: 1;
-  height: 1px;
-  background: rgba(212,175,55,0.15);
-}
-.divider-text { color: #3a2a08; font-size: 11px; }
+.login-link { text-align: center; font-size: 13px; color: #5a3e15; margin-top: 18px; }
+.login-link a { color: #d4af37; text-decoration: none; font-weight: 700; }
 
-/* Login link */
-.login-link {
-  text-align: center;
-  font-size: 13px;
-  color: #5a3e15;
-}
-.login-link a {
-  color: #d4af37;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-/* Rank preview */
 .rank-preview {
-  margin: 20px 0;
-  background: rgba(10,7,0,0.6);
-  border: 1px solid rgba(212,175,55,0.15);
-  border-radius: 12px;
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  margin: 18px 0; background: rgba(10,7,0,0.6);
+  border: 1px solid rgba(212,175,55,0.15); border-radius: 12px;
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px;
 }
-.rank-icon { font-size: 24px; animation: float 3s ease-in-out infinite; }
-.rank-info { flex: 1; }
+.rank-icon { font-size: 22px; animation: float 3s ease-in-out infinite; }
 .rank-name { font-size: 13px; font-weight: 700; color: #d4af37; }
 .rank-desc { font-size: 11px; color: #5a3e15; margin-top: 2px; }
 
-/* Success message */
-.success-msg {
-  display: none;
-  text-align: center;
-  padding: 20px;
+.error-msg {
+  background: rgba(255,50,50,0.1); border: 1px solid rgba(255,80,80,0.3);
+  border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #ff8080;
+  margin-bottom: 15px; display: none; text-align: center;
 }
+
+.success-msg { display: none; text-align: center; padding: 20px; }
 .success-icon { font-size: 60px; animation: float 2s ease-in-out infinite; margin-bottom: 15px; }
 .success-title { font-size: 22px; font-weight: 800; color: #d4af37; margin-bottom: 8px; }
 .success-sub { color: #5a3e15; font-size: 13px; line-height: 1.6; }
+
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(0,0,0,0.3);
+  border-top-color: #000;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
 </style>
 </head>
 <body>
@@ -377,6 +249,24 @@ input::placeholder { color: #3a2a08; }
     <div id="formSection">
       <div class="card-title">Create Account</div>
       <div class="card-sub">Join thousands of users growing their social media</div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <button class="google-btn" onclick="signUpWithGoogle()">
+        <svg class="google-icon" viewBox="0 0 48 48">
+          <path fill="#FFC107" d="M43.6 20.5h-1.9V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.5 29.5 3.5 24 3.5 12.7 3.5 3.5 12.7 3.5 24S12.7 44.5 24 44.5 44.5 35.3 44.5 24c0-1.2-.1-2.4-.3-3.5z"/>
+          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 18.9 13.5 24 13.5c3.1 0 5.8 1.1 8 3l6-6C34.5 7 29.5 5 24 5c-7.7 0-14.3 4.4-17.7 10.7z"/>
+          <path fill="#4CAF50" d="M24 44.5c5.4 0 10.3-1.8 14.1-5l-6.5-5.5c-2.1 1.5-4.8 2.5-7.6 2.5-5.2 0-9.6-3.3-11.2-8l-6.6 5.1C9.5 39.9 16.2 44.5 24 44.5z"/>
+          <path fill="#1976D2" d="M43.6 20.5H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.5l6.5 5.5C41.8 36 44.5 30.5 44.5 24c0-1.2-.1-2.4-.3-3.5z"/>
+        </svg>
+        Sign up with Google
+      </button>
+
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">or sign up with email</div>
+        <div class="divider-line"></div>
+      </div>
 
       <div class="photo-upload">
         <div class="photo-circle" onclick="document.getElementById('photoInput').click()">
@@ -440,7 +330,7 @@ input::placeholder { color: #3a2a08; }
 
       <div class="rank-preview">
         <div class="rank-icon">🥉</div>
-        <div class="rank-info">
+        <div>
           <div class="rank-name">Starting Rank: Bronze</div>
           <div class="rank-desc">Spend ₹50 to reach Silver 🥈</div>
         </div>
@@ -455,29 +345,29 @@ input::placeholder { color: #3a2a08; }
 
       <button class="btn-submit" id="submitBtn" onclick="handleSignup()">🚀 Create My Account</button>
 
-      <div class="divider">
-        <div class="divider-line"></div>
-        <div class="divider-text">Already have an account?</div>
-        <div class="divider-line"></div>
-      </div>
-
       <div class="login-link">
-        <a href="login.html">👋 Login to ASM Panel</a>
+        Already have an account? <a href="login.html">Login here</a>
       </div>
     </div>
 
     <div class="success-msg" id="successMsg">
       <div class="success-icon">🎉</div>
       <div class="success-title">Welcome to ASM Panel!</div>
-      <div class="success-sub">Your account has been created successfully.<br>Redirecting to dashboard...</div>
+      <div class="success-sub">Your account has been created successfully.<br>Redirecting...</div>
     </div>
   </div>
 </div>
 
+<!-- Firebase SDKs -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import {
+    getAuth, createUserWithEmailAndPassword, updateProfile,
+    GoogleAuthProvider, signInWithPopup
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import {
+    getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAO206UbraVsTWu5jV14XidgjMYXLRXQmw",
@@ -492,71 +382,159 @@ input::placeholder { color: #3a2a08; }
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  window.previewPhoto = function(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const preview = document.getElementById('photoPreview');
-      const emoji = document.getElementById('photoEmoji');
-      preview.src = e.target.result;
-      preview.style.display = 'block';
-      emoji.style.display = 'none';
-    };
-    reader.readAsDataURL(file);
+  window.auth = auth;
+  window.db = db;
+  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+  window.updateProfile = updateProfile;
+  window.GoogleAuthProvider = GoogleAuthProvider;
+  window.signInWithPopup = signInWithPopup;
+  window.doc = doc;
+  window.setDoc = setDoc;
+  window.getDoc = getDoc;
+  window.collection = collection;
+  window.query = query;
+  window.where = where;
+  window.getDocs = getDocs;
+
+  window.firebaseReady = true;
+</script>
+
+<script>
+let uploadedPhotoBase64 = '';
+
+function previewPhoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    uploadedPhotoBase64 = e.target.result;
+    const preview = document.getElementById('photoPreview');
+    const emoji = document.getElementById('photoEmoji');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    emoji.style.display = 'none';
   };
+  reader.readAsDataURL(file);
+}
 
-  window.checkUsername = function(input) {
-    const val = input.value.replace(/[^a-zA-Z0-9_]/g, '');
-    input.value = val;
-  };
+function checkUsername(input) {
+  input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
+}
 
-  window.handleSignup = async function() {
-    const fullName = document.getElementById('fullName').value.trim();
-    const username = document.getElementById('username').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPass = document.getElementById('confirmPass').value;
-    const terms = document.getElementById('terms').checked;
-    const btnSubmit = document.getElementById('submitBtn');
+function showError(msg) {
+  const errorMsg = document.getElementById('errorMsg');
+  errorMsg.textContent = '❌ ' + msg;
+  errorMsg.style.display = 'block';
+}
 
-    if (!fullName) { alert('Please enter your full name'); return; }
-    if (!username) { alert('Please choose a username'); return; }
-    if (!email) { alert('Please enter your email'); return; }
-    if (password.length < 6) { alert('Password must be at least 6 characters'); return; }
-    if (password !== confirmPass) { alert('Passwords do not match'); return; }
-    if (!terms) { alert('Please accept the terms and conditions'); return; }
+function hideError() {
+  document.getElementById('errorMsg').style.display = 'none';
+}
 
-    btnSubmit.textContent = '⏳ Creating account...';
-    btnSubmit.style.pointerEvents = 'none';
+async function createUserDoc(uid, data) {
+  await window.setDoc(window.doc(window.db, 'users', uid), {
+    fullName: data.fullName || '',
+    username: data.username || '',
+    email: data.email || '',
+    photoURL: data.photoURL || '',
+    balance: 0,
+    totalOrders: 0,
+    totalSpent: 0,
+    rank: 'Bronze',
+    verified: false,
+    referralCode: 'ASM' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+    referredBy: data.referredBy || '',
+    role: 'user',
+    ghosted: false,
+    banned: false,
+    createdAt: new Date().toISOString()
+  });
+}
 
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+async function handleSignup() {
+  hideError();
 
-      await setDoc(doc(db, "users", user.uid), {
-        fullName: fullName,
-        username: username,
-        email: email,
-        balance: 0.00,
-        totalSpent: 0.00,
-        rank: "Bronze",
-        role: "user",
-        createdAt: new Date()
-      });
+  const fullName = document.getElementById('fullName').value.trim();
+  const username = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const confirmPass = document.getElementById('confirmPass').value;
+  const referral = document.getElementById('referral').value.trim();
+  const terms = document.getElementById('terms').checked;
 
-      document.getElementById('formSection').style.display = 'none';
-      document.getElementById('successMsg').style.display = 'block';
+  if (!fullName) return showError('Please enter your full name');
+  if (!username) return showError('Please choose a username');
+  if (!email) return showError('Please enter your email');
+  if (password.length < 6) return showError('Password must be at least 6 characters');
+  if (password !== confirmPass) return showError('Passwords do not match');
+  if (!terms) return showError('Please accept the terms and conditions');
 
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 2500);
-    } catch (error) {
-      alert("Error: " + error.message);
-      btnSubmit.textContent = '🚀 Create My Account';
-      btnSubmit.style.pointerEvents = 'auto';
+  const btn = document.getElementById('submitBtn');
+  btn.innerHTML = '<span class="spinner"></span> Creating Account...';
+  btn.disabled = true;
+
+  try {
+    const userCred = await window.createUserWithEmailAndPassword(window.auth, email, password);
+    const user = userCred.user;
+
+    await window.updateProfile(user, {
+      displayName: username,
+      photoURL: uploadedPhotoBase64 || ''
+    });
+
+    await createUserDoc(user.uid, {
+      fullName, username, email,
+      photoURL: uploadedPhotoBase64,
+      referredBy: referral
+    });
+
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 2000);
+
+  } catch (err) {
+    btn.innerHTML = '🚀 Create My Account';
+    btn.disabled = false;
+
+    if (err.code === 'auth/email-already-in-use') {
+      showError('This email is already registered. Try logging in.');
+    } else if (err.code === 'auth/invalid-email') {
+      showError('Please enter a valid email address');
+    } else if (err.code === 'auth/weak-password') {
+      showError('Password is too weak');
+    } else {
+      showError(err.message);
     }
-  };
+  }
+}
+
+async function signUpWithGoogle() {
+  hideError();
+  try {
+    const provider = new window.GoogleAuthProvider();
+    const result = await window.signInWithPopup(window.auth, provider);
+    const user = result.user;
+
+    const userDocRef = window.doc(window.db, 'users', user.uid);
+    const userDocSnap = await window.getDoc(userDocRef);
+
+    if (!userDocSnap.exists()) {
+      await createUserDoc(user.uid, {
+        fullName: user.displayName || '',
+        username: user.displayName ? user.displayName.replace(/\s+/g, '').toLowerCase() : 'user' + Date.now(),
+        email: user.email,
+        photoURL: user.photoURL || ''
+      });
+    }
+
+    window.location.href = 'index.html';
+  } catch (err) {
+    showError(err.message);
+  }
+}
 </script>
 </body>
 </html>
