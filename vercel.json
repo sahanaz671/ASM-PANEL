@@ -1,15 +1,5 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/ASM-PANEL/index.html" },
-    { "source": "/signup", "destination": "/ASM-PANEL/signup.html" },
-    { "source": "/login", "destination": "/ASM-PANEL/login.html" },
-    { "source": "/services", "destination": "/ASM-PANEL/services.html" },
-    { "source": "/order", "destination": "/ASM-PANEL/order.html" },
-    { "source": "/order-history", "destination": "/ASM-PANEL/order-history.html" },
-    { "source": "/funds", "destination": "/ASM-PANEL/funds.html" },
-    { "source": "/payment-verify", "destination": "/ASM-PANEL/payment-verify.html" },
-    { "source": "/profile", "destination": "/ASM-PANEL/profile.html" },
-    { "source": "/leaderboard", "destination": "/ASM-PANEL/leaderboard.html" },
-    { "source": "/support", "destination": "/ASM-PANEL/support.html" }
+    { "source": "/", "destination": "/ASM-PANEL/index.html" }
   ]
 }
