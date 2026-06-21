@@ -50,7 +50,6 @@ body {
   0% { transform:translateX(-100%) rotate(25deg); }
   100% { transform:translateX(200%) rotate(25deg); }
 }
-
 #bgWrap { position:fixed; inset:0; z-index:0; overflow:hidden; }
 .base {
   position:absolute; inset:0;
@@ -71,9 +70,7 @@ body {
 .orb { position:absolute; border-radius:50%; filter:blur(70px); animation:orbFloat ease-in-out infinite; }
 .orb1 { width:300px; height:300px; background:radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%); top:-80px; left:-60px; animation-duration:12s; }
 .orb2 { width:250px; height:250px; background:radial-gradient(circle, rgba(255,200,50,0.07) 0%, transparent 70%); bottom:20%; right:-40px; animation-duration:15s; animation-delay:4s; }
-
 .content { position:relative; z-index:10; }
-
 .navbar {
   position:fixed; top:0; left:0; right:0; z-index:100;
   background:rgba(5,3,0,0.9);
@@ -92,7 +89,6 @@ body {
   color:#d4af37;
   transition:all 0.3s;
 }
-.back-btn:hover { background:rgba(212,175,55,0.2); }
 .nav-title {
   font-size:18px; font-weight:800;
   background:linear-gradient(90deg, #b8860b, #d4af37, #ffd700, #d4af37, #b8860b);
@@ -101,11 +97,7 @@ body {
   -webkit-text-fill-color:transparent;
   animation:goldShimmer 2.5s linear infinite;
 }
-
-.hero-block {
-  padding:95px 20px 10px;
-  text-align:center;
-}
+.hero-block { padding:95px 20px 10px; text-align:center; }
 .hero-icon {
   font-size:46px;
   display:inline-block;
@@ -113,10 +105,7 @@ body {
   filter:drop-shadow(0 0 18px rgba(212,175,55,0.5));
   margin-bottom:10px;
 }
-.hero-title {
-  font-size:24px; font-weight:900;
-  margin-bottom:6px;
-}
+.hero-title { font-size:24px; font-weight:900; margin-bottom:6px; }
 .hero-title .gold {
   background:linear-gradient(90deg, #b8860b, #d4af37, #ffd700, #ffe566, #d4af37, #b8860b);
   background-size:200% auto;
@@ -124,14 +113,7 @@ body {
   -webkit-text-fill-color:transparent;
   animation:goldShimmer 2.5s linear infinite;
 }
-.hero-sub {
-  color:#8b6520;
-  font-size:13px;
-  max-width:300px;
-  margin:0 auto;
-  line-height:1.6;
-}
-
+.hero-sub { color:#8b6520; font-size:13px; max-width:300px; margin:0 auto; line-height:1.6; }
 .support-list {
   padding:25px 20px 10px;
   display:flex;
@@ -140,7 +122,6 @@ body {
   max-width:480px;
   margin:0 auto;
 }
-
 .support-card {
   position:relative;
   display:flex;
@@ -172,13 +153,7 @@ body {
   background:linear-gradient(120deg, transparent, rgba(212,175,55,0.08), transparent);
   animation:glowSweep 5s linear infinite;
 }
-.support-card:hover {
-  transform:translateY(-5px) scale(1.01);
-  border-color:rgba(212,175,55,0.6);
-  box-shadow:0 15px 40px rgba(212,175,55,0.22);
-}
 .support-card:active { transform:scale(0.98); }
-
 .icon-ring-wrap {
   position:relative;
   width:62px; height:62px;
@@ -202,21 +177,12 @@ body {
   font-size:26px;
   animation:iconSpin 3s ease-in-out infinite;
 }
-
 .wa-circle { background:linear-gradient(135deg, #1a3d1a, #25D366, #1a3d1a); box-shadow:0 0 20px rgba(37,211,102,0.4); }
 .tg-circle { background:linear-gradient(135deg, #0d2a4a, #229ED9, #0d2a4a); box-shadow:0 0 20px rgba(34,158,217,0.4); }
 .ig-circle { background:linear-gradient(135deg, #4a1d4a, #d62976, #fa7e1e, #feda75); box-shadow:0 0 20px rgba(214,41,118,0.4); }
-
 .support-info { flex:1; min-width:0; }
-.support-name {
-  font-size:16px; font-weight:800;
-  color:#e8c87a;
-  margin-bottom:3px;
-}
-.support-desc {
-  font-size:12px; color:#6b5020;
-  margin-bottom:6px;
-}
+.support-name { font-size:16px; font-weight:800; color:#e8c87a; margin-bottom:3px; }
+.support-desc { font-size:12px; color:#6b5020; margin-bottom:6px; }
 .support-handle {
   font-size:11px;
   color:#d4af37;
@@ -226,14 +192,7 @@ body {
   padding:3px 10px;
   border-radius:20px;
 }
-
-.support-arrow {
-  font-size:20px;
-  color:#d4af37;
-  flex-shrink:0;
-  animation:float 2.5s ease-in-out infinite;
-}
-
+.support-arrow { font-size:20px; color:#d4af37; flex-shrink:0; animation:float 2.5s ease-in-out infinite; }
 .status-badge {
   position:absolute;
   top:14px; right:14px;
@@ -252,12 +211,7 @@ body {
   box-shadow:0 0 8px #3ddc6f;
   animation:pulse 1.5s ease-in-out infinite;
 }
-
-.bottom-note {
-  max-width:480px;
-  margin:25px auto 0;
-  padding:0 20px;
-}
+.bottom-note { max-width:480px; margin:25px auto 0; padding:0 20px; }
 .note-card {
   background:linear-gradient(135deg, rgba(10,7,0,0.85), rgba(20,13,0,0.85));
   border:1px solid rgba(212,175,55,0.2);
@@ -269,7 +223,6 @@ body {
 .note-icon { font-size:26px; animation:float 3s ease-in-out infinite; margin-bottom:8px; }
 .note-title { font-size:14px; font-weight:700; color:#d4af37; margin-bottom:4px; }
 .note-text { font-size:12px; color:#5a3e15; line-height:1.6; }
-
 .bottom-nav {
   position:fixed; bottom:0; left:0; right:0; z-index:100;
   background:rgba(5,3,0,0.95);
@@ -288,28 +241,23 @@ body {
 </style>
 </head>
 <body>
-
 <div id="bgWrap">
   <div class="base"></div>
   <div class="veins"></div>
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
 </div>
-
 <div class="content">
   <nav class="navbar">
     <a href="index.html" class="back-btn">←</a>
     <div class="nav-title">Support</div>
   </nav>
-
   <div class="hero-block">
     <div class="hero-icon">💬</div>
     <div class="hero-title">We're Here <span class="gold">24/7</span></div>
     <div class="hero-sub">Reach out anytime — our premium support team responds fast.</div>
   </div>
-
   <div class="support-list">
-
     <a href="https://wa.me/916295761804" target="_blank" class="support-card">
       <div class="status-badge"><span class="status-dot"></span> Online</div>
       <div class="icon-ring-wrap">
@@ -324,7 +272,6 @@ body {
       </div>
       <div class="support-arrow">→</div>
     </a>
-
     <a href="https://t.me/asfeature" target="_blank" class="support-card">
       <div class="status-badge"><span class="status-dot"></span> Online</div>
       <div class="icon-ring-wrap">
@@ -339,7 +286,6 @@ body {
       </div>
       <div class="support-arrow">→</div>
     </a>
-
     <a href="https://www.instagram.com/ashik_official89?igsh=MnVjdjJ4dTh3aXZ2" target="_blank" class="support-card">
       <div class="icon-ring-wrap">
         <div class="icon-ring"></div>
@@ -353,9 +299,7 @@ body {
       </div>
       <div class="support-arrow">→</div>
     </a>
-
   </div>
-
   <div class="bottom-note">
     <div class="note-card">
       <div class="note-icon">⚡</div>
@@ -364,7 +308,6 @@ body {
     </div>
   </div>
 </div>
-
 <nav class="bottom-nav">
   <a href="index.html" class="nav-item"><span>🏠</span><span>Home</span></a>
   <a href="services.html" class="nav-item"><span>🛍️</span><span>Services</span></a>
@@ -372,6 +315,5 @@ body {
   <a href="funds.html" class="nav-item"><span>💰</span><span>Funds</span></a>
   <a href="profile.html" class="nav-item"><span>👤</span><span>Profile</span></a>
 </nav>
-
 </body>
-</html>
+  </html>
