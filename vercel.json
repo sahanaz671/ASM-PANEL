@@ -1,5 +1,10 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/ASM-PANEL/index.html" }
+    { "source": "/", "destination": "/ASM-PANEL/index.html" },
+    { "source": "/signup", "destination": "/ASM-PANEL/signup.html" },
+    { "source": "/login", "destination": "/ASM-PANEL/login.html" },
+    { "source": "/services", "destination": "/ASM-PANEL/services.html" },
+    { "source": "/order", "destination": "/ASM-PANEL/order.html" },
+    { "source": "/support", "destination": "/ASM-PANEL/support.html" }
   ]
 }
